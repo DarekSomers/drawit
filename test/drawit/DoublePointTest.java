@@ -3,6 +3,9 @@ package drawit;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import drawit.DoublePoint;
+import drawit.DoubleVector;
  
 class DoublePointTest {
 

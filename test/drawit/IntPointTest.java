@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import drawit.IntPoint;
+import drawit.IntVector;
+
 class IntPointTest { 
 
 	@Test

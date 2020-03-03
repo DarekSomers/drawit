@@ -53,21 +53,27 @@ public class PointArrays {
 	}
 
 	public static IntPoint[] insert(IntPoint[] points, int index, IntPoint point) {
-		IntPoint[] insert = new IntPoint[points.length];
+		IntPoint[] insert = new IntPoint[points.length+1];
 		
-		for (int i = insert.length-1; i > index; i--) {
-			insert[i] = insert[i-1];
+		for (int i = points.length; i >= index; i--) {
+			insert[i] = points[i-1];
 		}
 		insert[index] = point;
+		for (int i = 0; i < index; i++) {
+			insert[i] = points[i];
+		}
 		return insert;
 		
 	}
 	
 	public static IntPoint[] remove(IntPoint[] points, int index) {
-		IntPoint[] remove = new IntPoint[points.length];
+		IntPoint[] remove = new IntPoint[points.length-1];
 		
-		for (int i = index; i<remove.length -1; i++) {
-			remove[i] = remove[i+1];
+		for (int i = 0; i<remove.length; i++) {
+			if (i < index)
+				remove[i] = points[i];
+			else
+				remove[i] = points[i+1];
 		}
 		return remove;
 		
@@ -76,8 +82,5 @@ public class PointArrays {
 		IntPoint[] update = PointArrays.copy(points);
 		update[index] = value;
 		return update;
-		
-		
-		
 	}
 }
