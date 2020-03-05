@@ -2,9 +2,9 @@ package drawit;
 
 public class RoundedPolygon { 
 	
-	public IntPoint[] vertices;
+	private IntPoint[] vertices;
+	private int rad;
 	
-	public int rad;
 	
 	public RoundedPolygon() {
 	}
@@ -38,9 +38,36 @@ public class RoundedPolygon {
 	}
 	
 	public boolean contains(IntPoint point) {
+		int intersection = 0;
 		
+		for (IntPoint vertex: vertices) {
+			if (point.equals(vertex)) {
+				return true;
+			}
+		}
+		
+		for (int i = 0; i < vertices.length; i++) {
+			if (point.isOnLineSegment(vertices[i-1], vertices[i]))
+				return true;
+			
+			if (IntPoint.lineSegmentsIntersect(point, new IntPoint(1000000, point.getY()), vertices[i-1], vertices[i]))
+				intersection++;
+		}
+		
+		if (intersection%2 == 1)
+			return true;
+		
+		else
+			return false;
 	}
 	public String getDrawingCommands() {
+		String result;
+		
+		if (vertices.length < 3) {
+			result = null;
+			return result;
+		}
+		
 		
 	}
 	
