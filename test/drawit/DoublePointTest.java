@@ -21,18 +21,21 @@ class DoublePointTest {
 		//test met tolerantie assert.Equals(met 3 argumenten);
 		//assert v.plus(v3).getX() == 7.7;
 		//assert v.plus(v3).getY() == 12.1;
-		System.out.print(v.plus(v3).getX());
-		System.out.print(v.plus(v3).getY());
+		assertEquals(v.plus(v3).getX(), 7.7, 0.1);
+		assertEquals(v.plus(v3).getY(), 12.1, 0.1);
+		//System.out.print(v.plus(v3).getX());
+		//System.out.print(v.plus(v3).getY());
 		
-		assert v.minus(v2).getX() == 5.5 ;
-		assert v.minus(v2).getY() == 7.7;
-		System.out.print(v.minus(v2).getX());
-		System.out.print(v.minus(v2).getY());
+		assertEquals(v.minus(v2).getX(), 5.5, 0.1);
+		assertEquals(v.minus(v2).getY(), 7.7, 0.1);
+
+		//System.out.print(v.minus(v2).getX());
+		//System.out.print(v.minus(v2).getY());
 		
-		//DoublePoint d = new DoublePoint(2.3, 7.8);
+		DoublePoint d = new DoublePoint(2.3, 7.8);
 		
-		//assert d.round().getX() == 2;
-		//assert d.round().getY() == 8;
+		assert d.round().getX() == 2;
+		assert d.round().getY() == 8;
 		
 		
 		

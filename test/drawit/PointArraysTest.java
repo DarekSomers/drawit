@@ -71,6 +71,21 @@ class PointArraysTest {
 			assertEquals(PointArrays.update(points, 4, new IntPoint(99999,99999))[i].getX(), pointssss[i].getX());
 			assertEquals(PointArrays.update(points, 4, new IntPoint(99999,99999))[i].getY(), pointssss[i].getY());
 		}
+		IntPoint[] shorty = {p1,p2};
+		IntPoint[] fonkyTriangle = {new IntPoint(0,0), new IntPoint(1,0), new IntPoint(2,0), new IntPoint(1,3)};
+		IntPoint[] notSofonkyTriangle = {new IntPoint(0,0), new IntPoint(1,0), new IntPoint(1,0), new IntPoint(1,3)};
+		IntPoint[] unCoollist = {new IntPoint(1,1),new IntPoint(1,4),new IntPoint(4,1),new IntPoint(5,4)};
+		IntPoint[] coollist = {new IntPoint(1,1),new IntPoint(4,1),new IntPoint(4,4),new IntPoint(1,4)};
+		
+		System.out.print(PointArrays.checkDefinesProperPolygon(unCoollist));
+		
+		assert PointArrays.checkDefinesProperPolygon(shorty) == "The given array does not contain enough points to create a polygon!";
+		assert PointArrays.checkDefinesProperPolygon(fonkyTriangle) == "The array contains one or more points that lie on the edge of the polygon.";
+		assert PointArrays.checkDefinesProperPolygon(notSofonkyTriangle) == "The array contains one or more points that coincide.";
+		assert PointArrays.checkDefinesProperPolygon(unCoollist) == "A proper polygon cannot contain intersecting edges.";
+		assert PointArrays.checkDefinesProperPolygon(coollist) == null;
+		
+		
 	}
 
 }

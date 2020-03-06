@@ -55,6 +55,8 @@ public class RoundedPolygon {
 			else if (i == 0 && point.isOnLineSegment(vertices[vertices.length-1], vertices[i]))
 				return true;
 			
+			if (vertices[i].isOnLineSegment(point, new IntPoint(1000000, point.getY())))
+				intersection++;
 			if (i != 0 && IntPoint.lineSegmentsIntersect(point, new IntPoint(1000000, point.getY()), vertices[i-1], vertices[i]))
 				intersection++;
 			else if(i == 0 && IntPoint.lineSegmentsIntersect(point, new IntPoint(1000000, point.getY()), vertices[vertices.length-1], vertices[i]))

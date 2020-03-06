@@ -1,7 +1,16 @@
 package drawit;
 
 public class PointArrays { 
-	
+	/**
+	 * 
+	 * @post returns null when none of the conditions of failure are met.
+	 * 		| points.length < 3  ||
+	 * 		| points[i].isOnLineSegment(points[i-1],points[i+1]) ||
+	 * 		| points[j].equals(points[i]) ||
+	 * 		| IntPoint.linSegmentsIntersect(points[i-3],points[i-2],points[i-1],points[i])
+	 * 
+	 * 
+	 */
 	public static String checkDefinesProperPolygon(IntPoint[] points) {
 		String result = null;
 		if (points.length < 3) {
@@ -9,28 +18,50 @@ public class PointArrays {
 			return result;
 		}
 		
-		for (int i=0; i <= points.length; i++) {
-			if (points[i].isOnLineSegment(points[i-1],points[i+1])== true) {
-				
+		for (int i=0; i < points.length; i++) {
+			
+			if (i == 0 && points[i].isOnLineSegment(points[points.length-1], points[i+1])==true) {
 				result = "The array contains one or more points that lie on the edge of the polygon.";
 				return result;
 			}
-			if (points[points.length-1].isOnLineSegment(points[points.length-2], points[0])==true) {
+			
+			else if (i == points.length-1 && points[i].isOnLineSegment(points[i-1], points[0])==true) {
 				result = "The array contains one or more points that lie on the edge of the polygon.";
 				return result;
+			}
+			
+			else if (i != 0 && i != points.length-1 && points[i].isOnLineSegment(points[i-1],points[i+1])== true) {
+				result = "The array contains one or more points that lie on the edge of the polygon.";
+				return result;
+			}
+			
+		}
+		
+		for (int j = 0; j < points.length-1; j++) {
+			for (int i = j+1; i < points.length; i++)	{
+				if (points[j].equals(points[i])==true) {
+					result = "The array contains one or more points that coincide.";
+				}
 			}
 		}
 		
-		for (int i = 0; i < points.length; i++)	{
-			if (points[i].equals(points[i-1])==true) {
-				result = "The array contains one or more points that coincide.";
-			}
-		}
 		
 		if (points.length > 3) {
 		
-			for (int i = 3; i < points.length; i++) {
-				if (IntPoint.lineSegmentsIntersect(points[i-3],points[i-2],points[i-1],points[i]) == true) {
+			for (int i = 0; i < points.length; i++) {
+				if (i == 0 && IntPoint.lineSegmentsIntersect(points[points.length-3],points[points.length-2],points[points.length-1],points[i]) == true) {
+					result = "A proper polygon cannot contain intersecting edges.";
+					return result;
+				}
+				else if (i == 1 && IntPoint.lineSegmentsIntersect(points[points.length-2],points[points.length-1],points[i-1],points[i]) == true) {
+					result = "A proper polygon cannot contain intersecting edges.";
+					return result;
+				}
+				else if (i == 2 && IntPoint.lineSegmentsIntersect(points[points.length-1],points[i-2],points[i-1],points[i]) == true) {
+					result = "A proper polygon cannot contain intersecting edges.";
+					return result;
+				}
+				else if (i > 2 && IntPoint.lineSegmentsIntersect(points[i-3],points[i-2],points[i-1],points[i]) == true) {
 					result = "A proper polygon cannot contain intersecting edges.";
 					return result;
 				}
@@ -41,7 +72,14 @@ public class PointArrays {
 	
 	}
 	
-	
+	/**
+	 * 
+	 * @post Returns a new array with the same contents as the given array.
+	 * 		| for (i =0; i<points.length; i++) {copy[i] == new IntPoint[i]}
+	 * 		| copy[i] == new IntPoint[i]
+	 * 		
+	 * 
+	 */
 	public static IntPoint[] copy(IntPoint[] points) {
 		IntPoint[] copy = new IntPoint[points.length];
 		int i = 0;
