@@ -1,16 +1,23 @@
 package drawit;
 
+import java.util.Arrays;
+
+/**
+ * Creates a list of IntPoint objects and checks the validaty of the polygon they create
+ */
+
 public class PointArrays { 
-	/**
-	 * 
-	 * @post returns null when none of the conditions of failure are met.
-	 * 		| points.length < 3  ||
-	 * 		| points[i].isOnLineSegment(points[i-1],points[i+1]) ||
-	 * 		| points[j].equals(points[i]) ||
-	 * 		| IntPoint.linSegmentsIntersect(points[i-3],points[i-2],points[i-1],points[i])
-	 * 
-	 * 
-	 */
+	///**
+	 //* Returns the reason why the given PointArray is not a proper polygon or returns null
+	 //* @post returns null when none of the conditions of failure are met.
+	 //* 		| points.length < 3   ||
+	 //* 		| for each i in 0..points.length:
+	 //* 		|	points[i].isOnLineSegment(points[i-1],points[i+1])
+	 //* 		| 	points[i].isOnLineSegment(points[i-1],points[i+1]) ||
+	 //* 		| 	points[j].equals(points[i]) ||
+	 //* 		|	IntPoint.linSegmentsIntersect(points[i-3],points[i-2],points[i-1],points[i]) &&
+	 //* 		| result != null
+	 //*/
 	public static String checkDefinesProperPolygon(IntPoint[] points) {
 		String result = null;
 		if (points.length < 3) {
@@ -73,15 +80,11 @@ public class PointArrays {
 	}
 	
 	/**
-	 * 
+	 * Returns a new array with the same contents as the given array.
 	 * @post Returns a new array with the same contents as the given array.
-	 * 		| for (i =0; i<points.length; i++) {copy[i] == new IntPoint[i]}
-	 * 		| copy[i] == new IntPoint[i]
-	 * 		
-	 * 
 	 */
 	public static IntPoint[] copy(IntPoint[] points) {
-		IntPoint[] copy = new IntPoint[points.length];
+		IntPoint[] copy= new IntPoint[points.length];
 		int i = 0;
 		for (IntPoint element: points) {
 			copy[i]=element;
@@ -90,10 +93,17 @@ public class PointArrays {
 		return copy;
 	}
 
+	/**
+	 * Returns a new PointArray with the given IntPoint inserted into the given IntPoint array at the given index
+	 * @invar | index != null
+	 * @pre the index cannot go out of bounds of the IntPoint[] object
+	 * 		| index >= 0 && index <= points.length
+	 * @post the given IntPoint object has been inserted into the given IntPoint array at the given index
+	 */
 	public static IntPoint[] insert(IntPoint[] points, int index, IntPoint point) {
 		IntPoint[] insert = new IntPoint[points.length+1];
 		
-		for (int i = points.length; i >= index; i--) {
+		for (int i = points.length; i > index; i--) {
 			insert[i] = points[i-1];
 		}
 		insert[index] = point;
@@ -104,10 +114,17 @@ public class PointArrays {
 		
 	}
 	
+	/**
+	 * Returns a new PointArray with the given IntPoint removed from the given IntPoint array at the given index
+	 * @invar | index != null
+	 * @pre the index cannot go out of bounds of the IntPoint[] object
+	 * 		| index >= 0 && index < points.length
+	 * @post  the given IntPoint object has been removed from the given IntPoint array at the given index
+	 */
 	public static IntPoint[] remove(IntPoint[] points, int index) {
 		IntPoint[] remove = new IntPoint[points.length-1];
 		
-		for (int i = 0; i<remove.length; i++) {
+		for (int i = 0; i < remove.length; i++) {
 			if (i < index)
 				remove[i] = points[i];
 			else
@@ -116,6 +133,13 @@ public class PointArrays {
 		return remove;
 		
 	}
+	 /**
+	  * Returns a new PointArray where the given IntPoint replaces the old IntPoint at the given index of the IntPoint array
+	  * @invar | index != null
+	  * @pre the index cannot go out of bounds of the given IntPoint[] object
+	  * 	| index >= 0 && index < points.length
+	  * @post the given IntPoint object has been replaces the old IntPoint object at the given index of the IntPoint array
+	  */
 	public static IntPoint[] update(IntPoint[] points, int index, IntPoint value) {
 		IntPoint[] update = PointArrays.copy(points);
 		update[index] = value;

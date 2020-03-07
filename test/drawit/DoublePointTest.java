@@ -4,14 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import drawit.DoublePoint;
-import drawit.DoubleVector;
- 
 class DoublePointTest {
 
 	@Test
 	void test() {
-		DoublePoint v = new DoublePoint(6.6,9.9);
+DoublePoint v = new DoublePoint(6.6,9.9);
 		
 		assert v.getX()==6.6;
 		assert v.getY()==9.9;
@@ -36,12 +33,6 @@ class DoublePointTest {
 		
 		assert d.round().getX() == 2;
 		assert d.round().getY() == 8;
-		
-		
-		
-		
-		
-
 	}
 
 }

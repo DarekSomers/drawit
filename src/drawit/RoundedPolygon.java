@@ -2,12 +2,30 @@ package drawit;
 
 import java.lang.Math;
 
+/**
+ * Creates a RoundedPolygon object and creates the commands for drawing the actual polygon
+ */
+
 public class RoundedPolygon { 
 	
+	/**
+	 * Initializes the RoundedPolygon's PointArray
+	 * @pre The PointArray cannot be null
+	 * 		| vertices != null
+	 * @representationObject
+	 */
 	private IntPoint[] vertices;
+	/**
+	 * Initializes the RoundedPolygon's radius
+	 * @pre Radius cannot be null
+	 * 		| rad != null
+	 * @representationObject
+	 */
 	private int rad;
 	
-	
+	/**
+	 * Initiates this RoundedPolygon
+	 */
 	public RoundedPolygon() {
 	}
 
@@ -19,27 +37,82 @@ public class RoundedPolygon {
 		return rad;
 	}
 	
+	/**
+	 * Sets the vertices of this RoundedPolygon to the given PointArray
+	 * @post the vertices now equal the given PointArray
+	 * 		| this.getVertices()[0].getX() == PointArrays.copy(newVertices)[0].getX()
+	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
+	 * 		|!(PointArrays.checkDefinesProperPolygon(newVertices) != null)
+	 */
 	public void setVertices(IntPoint[] newVertices) {
-		
+		if (PointArrays.checkDefinesProperPolygon(newVertices) != null)
+			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(newVertices));
 		vertices = PointArrays.copy(newVertices);
+		
 	}
 	
+	/**
+	 * Sets the radius of this RoundedPolygon to the given radius
+	 * @post rad now equals the given radius
+	 * 		| getRadius() == radius
+	 * @throws IllegalArgumentException when the given radius is negative
+	 * 		| !(radius < 0)
+	 */
 	public void setRadius(int radius) {
+		if (radius < 0)
+			throw new IllegalArgumentException("The radius cannot be negative.");
 		rad = radius;
 	}
 	
+	/**
+	 * Inserts the given point into this vertex array at the given index
+	 * @mutates | this
+	 * @invar | index != null
+	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
+	 * 		| !(index < 0 || index > getVertices().length)
+	 * @post the given IntPoint has been inserted into this PointArray at the given index
+	 * 		| getVertices()[index] == point
+	 */
 	public void insert(int index, IntPoint point) {
+		if (index < 0 || index > getVertices().length)
+			throw new IllegalArgumentException("Index out of bounds.");
 		vertices = PointArrays.insert(vertices, index, point);
 	}
 	
+	/**
+	 * removes the point at the given index from this vertex array
+	 * @mutates | this
+	 * @invar | index != null
+	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
+	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @post the IntPoint at the given index has been removed from this PointArray
+	 * 		| index > getVertices().length-1 || getVertices()[index] != old(getVertices()[index])
+	 */
 	public void remove(int index) {
+		if (index < 0 || index >= getVertices().length)
+			throw new IllegalArgumentException("Index out of bounds.");
 		vertices = PointArrays.remove(vertices, index);
 	}
 	
+	/**
+	 * Replaces the point at the given index of this vertex array by another
+	 * @mutates | this
+	 * @invar | index != null
+	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
+	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @post the IntPoint at the given index of this PointArray has been replaced by the given IntPoint
+	 * 		| getVertices()[index] == point
+	 */
 	public void update(int index, IntPoint point) {
+		if (index < 0 || index >= getVertices().length)
+			throw new IllegalArgumentException("Index out of bounds.");
 		vertices = PointArrays.update(vertices, index, point);
 	}
 	
+	/**
+	 * Returns whether the given point is contained by this figure
+	 * @post returns true when the IntPoint is contained by this RoundedPolygon otherwise returns false 
+	 */
 	public boolean contains(IntPoint point) {
 		int intersection = 0;
 		
@@ -69,14 +142,19 @@ public class RoundedPolygon {
 		else
 			return false;
 	}
+	
+	/**
+	 * Returns a string containing the drawing commands to draw this figure
+	 * @post Returns a string containing the drawing commands to draw this RoundedPolygon
+	 * @creates | result
+	 */
 	public String getDrawingCommands() {
 		String result = "";
 		
 		if (vertices.length < 3) {
-			result = null;
+			result = "";
 			return result;
 		}
-		
 		for (int i = 0; i < vertices.length; i++) {
 			IntPoint B = getVertices()[i];
 			IntPoint A;
@@ -100,8 +178,9 @@ public class RoundedPolygon {
 			DoublePoint BCc = new DoublePoint(B.getX(),B.getY()).plus(BC.asDoubleVector().scale(.5));
 			
 			if (BA.isCollinearWith(BC)) {
-				result += "line " + BA.getX() + " " + BA.getY() + " " + BC.getX() + " " + BC.getY() + "\r\n";
-				result += "arc " + 0 + " " + 0 + " " + 0 + " " + 0 + " " + 0 + "\r\n";
+				result += "line " + B.getX() + " " + B.getY() + " " + BAc.getX() + " " + BAc.getY() + "\r\n";
+				result += "line " + B.getX() + " " + B.getY() + " " + BCc.getX() + " " + BCc.getY() + "\r\n";
+				
 			}
 			
 			else {
@@ -111,14 +190,14 @@ public class RoundedPolygon {
 				DoubleVector BS = BAu.plus(BCu);
 				DoubleVector BSu = BS.scale(Math.pow(BS.getSize(), -1));
 				
-				DoublePoint centre = B.asDoublePoint().plus(BSu);
+				//DoublePoint centre = B.asDoublePoint().plus(BSu);
 				double BAUcutoff = BAu.dotProduct(BSu);
 				double unitRadius = Math.abs(BSu.crossProduct(BAu));
 				double minimumVector = Math.min(BA.asDoubleVector().getSize(), BC.asDoubleVector().getSize())/2.0;
 				double scaleFactor = Math.min(getRadius()/unitRadius, minimumVector/BAUcutoff);
-				
+
 				DoublePoint actualCentre = B.asDoublePoint().plus(BSu.scale(scaleFactor));
-				double actualRadius = getRadius()/scaleFactor;
+				double actualRadius = unitRadius*scaleFactor;
 				
 				DoublePoint BAStart = B.asDoublePoint().plus(BAu.scale(BAUcutoff*scaleFactor));
 				DoublePoint BCEnd = B.asDoublePoint().plus(BCu.scale(BAUcutoff*scaleFactor));

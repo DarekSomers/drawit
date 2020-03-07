@@ -1,28 +1,48 @@
 package drawit;
 
+/**
+ * Creates an IntPoint object 
+ */
 
 public class IntPoint { 
-	
+	/**
+	 * @pre x and y cannot be null
+	 * 		| x != null && y != null
+	 */
 	private int x;
 	private int y;
 
 	/**
 	 * Initializes this object with given x- and y- coordinates.
+	 * @invar the coordinates cannot be null
+	 * 		| x != null && y != null
 	 * @post The object's x coordinate equals the given x
 	 * 		|getX() == x
 	 * @post The object's y coordinate equals the given y
 	 * 		|getY() == y
 	 */
-	
 	public IntPoint(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * Gives back the x-coordinate of the IntPoint object
+	 * @return the x coordinate
+	 * 		| getX() == x 
+	 * @representationObject
+	 */
 	public int getX() {return this.x;}
+	/**
+	 * Gives back the y-coordinate of the IntPoint object
+	 * @return the y coordinate
+	 * 		| getY() == y
+	 * @representationObject
+	 */
 	public int getY() {return this.y;}
 	
 	/**
+	 * Returns whether this point's coordinates are equal to the given point's coordinates
 	 * @post returns true if this IntPoint is equal to the given IntPoint.
 	 * 		| (getX() == other.x && getY() == other.y) == true || 
 	 * 		| (getX() == other.x && getY() == other.y) == false
@@ -32,7 +52,8 @@ public class IntPoint {
 	}
 
 	/**
-	 * @post The point's coordinates are substracted from the vector's coordinates.
+	 * Returns the vector from the given point to this point
+	 * @post The given IntPoint's coordinates are substracted from this IntPoint's coordinates.
 	 * 		| result.getX() == this.getX() - other.getX() &&
 	 * 		| result.getY() == this.getY() - other.getY()
 	 */
@@ -44,8 +65,10 @@ public class IntPoint {
 	}
 	
 	/**
+	 * Returns whether this point lies on the line made by the two given points.
 	 * @post returns true if this IntPoint object lies on the line made by the two given IntPoint objects.
-	 * 		| result == true || result == false
+	 * 		| result == (c.minus(b).isCollinearWith(this.minus(b)) == true && this.minus(b).dotProduct(c.minus(b)) > 0 && 
+	 * 		| this.minus(b).dotProduct(c.minus(b)) < c.minus(b).dotProduct(c.minus(b)) ? true : false)
 	 */
 	public boolean isOnLineSegment(IntPoint b, IntPoint c) {
 		IntVector bc = c.minus(b);
@@ -62,6 +85,7 @@ public class IntPoint {
 	}
 	
 	/**
+	 * Returns a DoublePoint object with the same variables as the given IntPoint object. 
 	 * @post Returns a DoublePoint object with the same variables as the given IntPoint object. 
 	 * 		| result.getX() == this.getX() &&
 	 * 		| result.getY() == this.getY()
@@ -74,7 +98,8 @@ public class IntPoint {
 	}
 	
 	/**
-	 * @post The point is displaced over the given vector.
+	 * Returns a point whose coordinates are the addition of this point's coordinates and the given point's coordinates
+	 * @post The IntPoint is displaced over the given vector.
 	 * 		| result.getX() == this.getX() + vector.getX() &&
 	 * 		| result.getY() == this.getY() + vector.getY()
 	 */
@@ -86,7 +111,8 @@ public class IntPoint {
 	}
 	
 	/**
-	 * @post returns true if the given points have intersecting lines, otherwise returns false.
+	 * Checks whether the two vectors created by the four given points instersect
+	 * @post returns true if the given IntVectors ab and cd, made by the four given IntPoints, have intersecting lines, otherwise returns false.
 	 * 		| result == true || result == false
 	 */
 	public static boolean lineSegmentsIntersect(IntPoint a, IntPoint b, IntPoint c, IntPoint d) {
