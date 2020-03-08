@@ -23,7 +23,10 @@ class IntPointTest {
 		assert p.minus(p2).getY() == -1;
 		
 		IntPoint p3 = new IntPoint(3,-1);
+		
+		IntPoint p4 = new IntPoint(3,2);
 
+		assert p4.isOnLineSegment(p, p3) == true;
 		assert p.isOnLineSegment(p2, p3) == false;
 		
 		assert p.asDoublePoint().getX() == 3;

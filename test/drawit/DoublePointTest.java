@@ -15,9 +15,7 @@ DoublePoint v = new DoublePoint(6.6,9.9);
 		
 		DoublePoint v2 = new DoublePoint(1.1,2.2);
 		DoubleVector v3 = new DoubleVector(1.1,2.2);
-		//test met tolerantie assert.Equals(met 3 argumenten);
-		//assert v.plus(v3).getX() == 7.7;
-		//assert v.plus(v3).getY() == 12.1;
+		
 		assertEquals(v.plus(v3).getX(), 7.7, 0.1);
 		assertEquals(v.plus(v3).getY(), 12.1, 0.1);
 		//System.out.print(v.plus(v3).getX());

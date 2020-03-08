@@ -29,10 +29,18 @@ public class RoundedPolygon {
 	public RoundedPolygon() {
 	}
 
+	/**
+	 * Returns a copy of the array of vertices of the RoundedPolygon
+	 * @return PointArrays.copy(vertices)
+	 */
 	public IntPoint[] getVertices() {
 		return PointArrays.copy(vertices);
 	}
 	
+	/**
+	 * Returns the radius of the RoundedPolygon
+	 * @return rad
+	 */
 	public int getRadius() {
 		return rad;
 	}
@@ -70,6 +78,8 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index > getVertices().length)
+	 * @post The length of this array is increased by one
+	 * 		| getVertices().length == old(getVertices()).length+1
 	 * @post the given IntPoint has been inserted into this PointArray at the given index
 	 * 		| getVertices()[index] == point
 	 */
@@ -85,6 +95,8 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @post The length of this array is reduced by one
+	 * 		| getVertices().length == old(getVertices()).length-1
 	 * @post the IntPoint at the given index has been removed from this PointArray
 	 * 		| index > getVertices().length-1 || getVertices()[index] != old(getVertices()[index])
 	 */
@@ -100,6 +112,8 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @post The length of this array stays the same
+	 * 		| getVertices().length == old(getVertices()).length
 	 * @post the IntPoint at the given index of this PointArray has been replaced by the given IntPoint
 	 * 		| getVertices()[index] == point
 	 */
@@ -112,6 +126,8 @@ public class RoundedPolygon {
 	/**
 	 * Returns whether the given point is contained by this figure
 	 * @post returns true when the IntPoint is contained by this RoundedPolygon otherwise returns false 
+	 * The IntPoint is contained when it lies either on another vertex, an edge 
+	 * or when the amount of intersections between the vector, made by the given point and another at a far distance, and the edges is odd.
 	 */
 	public boolean contains(IntPoint point) {
 		int intersection = 0;
@@ -145,7 +161,10 @@ public class RoundedPolygon {
 	
 	/**
 	 * Returns a string containing the drawing commands to draw this figure
-	 * @post Returns a string containing the drawing commands to draw this RoundedPolygon
+	 * @post Returns a string ("line" and possibly "arc") containing the drawing commands to draw this RoundedPolygon.
+	 * Returns an empty string when there are less than 3 vertices.
+	 * Returns two "line" strings when the three vertexes are colinear.
+	 * Otherwise returns two "line" and one "arc" string.
 	 * @creates | result
 	 */
 	public String getDrawingCommands() {
