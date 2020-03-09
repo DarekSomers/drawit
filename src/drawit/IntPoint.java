@@ -129,7 +129,7 @@ public class IntPoint {
 			return result;}
 		if (ac.crossProduct(cd) * bc.crossProduct(cd) >= 0 ) {
 			result = false;
-		return result;}
+			return result;}
 		else {
 			result = true;
 			return result;}

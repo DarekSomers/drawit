@@ -78,14 +78,23 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index > getVertices().length)
+	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
+	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) != null)
 	 * @post The length of this array is increased by one
 	 * 		| getVertices().length == old(getVertices()).length+1
 	 * @post the given IntPoint has been inserted into this PointArray at the given index
 	 * 		| getVertices()[index] == point
 	 */
 	public void insert(int index, IntPoint point) {
+		
 		if (index < 0 || index > getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
+		/**
+		 * Note: Throwing an illegal argument exception here would be illogical as indices can only be placed on the edges of already existing polygons.
+		 *		 Doing so will always result in the error of a point laying on the egde
+		 * if (PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) != null) 
+		 * 		throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point))); 
+		 */
 		vertices = PointArrays.insert(vertices, index, point);
 	}
 	
@@ -95,6 +104,8 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
+	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)) != null)
 	 * @post The length of this array is reduced by one
 	 * 		| getVertices().length == old(getVertices()).length-1
 	 * @post the IntPoint at the given index has been removed from this PointArray
@@ -103,6 +114,8 @@ public class RoundedPolygon {
 	public void remove(int index) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)) != null)
+			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)));
 		vertices = PointArrays.remove(vertices, index);
 	}
 	
@@ -112,6 +125,8 @@ public class RoundedPolygon {
 	 * @invar | index != null
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
+	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
+	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)) != null)
 	 * @post The length of this array stays the same
 	 * 		| getVertices().length == old(getVertices()).length
 	 * @post the IntPoint at the given index of this PointArray has been replaced by the given IntPoint
@@ -120,6 +135,8 @@ public class RoundedPolygon {
 	public void update(int index, IntPoint point) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)) != null)
+			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)));
 		vertices = PointArrays.update(vertices, index, point);
 	}
 	
