@@ -1,6 +1,7 @@
 package drawit;
 
 import java.lang.Math;
+import java.util.stream.IntStream;
 
 /**
  * Creates a RoundedPolygon object and creates the commands for drawing the actual polygon
@@ -12,14 +13,12 @@ public class RoundedPolygon {
 	 * Initializes the RoundedPolygon's PointArray
 	 * @pre The PointArray cannot be null
 	 * 		| vertices != null
-	 * @representationObject
 	 */
 	private IntPoint[] vertices;
 	/**
 	 * Initializes the RoundedPolygon's radius
 	 * @pre Radius cannot be null
 	 * 		| rad != null
-	 * @representationObject
 	 */
 	private int rad;
 	
@@ -27,10 +26,15 @@ public class RoundedPolygon {
 	 * Initiates this RoundedPolygon
 	 */
 	public RoundedPolygon() {
+		IntPoint[] Initializer = {new IntPoint(0,0), new IntPoint(1,0), new IntPoint(1,1), new IntPoint(0,1)};
+		this.vertices = Initializer;
+		this.rad = 0;
 	}
 
 	/**
 	 * Returns a copy of the array of vertices of the RoundedPolygon
+	 * @throws IllegalArgumentException when the given PointArray is null
+	 * 		|!(vertices == null)
 	 * @return PointArrays.copy(vertices)
 	 */
 	public IntPoint[] getVertices() {
@@ -47,16 +51,18 @@ public class RoundedPolygon {
 	
 	/**
 	 * Sets the vertices of this RoundedPolygon to the given PointArray
-	 * @post the vertices now equal the given PointArray
-	 * 		| this.getVertices()[0].getX() == PointArrays.copy(newVertices)[0].getX()
+	 * @post Returns a new array with the same contents as the given array.
+	 * 		| IntStream.range(0, newVertices.length).allMatch(i -> getVertices()[i].getX() == newVertices[i].getX() && 
+	 * 		| getVertices()[i].getY() == newVertices[i].getY())
 	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
 	 * 		|!(PointArrays.checkDefinesProperPolygon(newVertices) != null)
 	 */
 	public void setVertices(IntPoint[] newVertices) {
-		if (PointArrays.checkDefinesProperPolygon(newVertices) != null)
+		vertices = newVertices;
+		if (PointArrays.checkDefinesProperPolygon(newVertices) != null) 
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(newVertices));
-		vertices = PointArrays.copy(newVertices);
-		
+			
+			
 	}
 	
 	/**
@@ -65,11 +71,17 @@ public class RoundedPolygon {
 	 * 		| getRadius() == radius
 	 * @throws IllegalArgumentException when the given radius is negative
 	 * 		| !(radius < 0)
+	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
+	 * 		|!(PointArrays.checkDefinesProperPolygon(getVertices()) != null)
 	 */
 	public void setRadius(int radius) {
-		if (radius < 0)
+		if (radius >= 0) {
+			rad = radius;
+			if (PointArrays.checkDefinesProperPolygon(getVertices()) != null) 
+				throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(getVertices()));
+		}
+		else
 			throw new IllegalArgumentException("The radius cannot be negative.");
-		rad = radius;
 	}
 	
 	/**
@@ -86,16 +98,13 @@ public class RoundedPolygon {
 	 * 		| getVertices()[index] == point
 	 */
 	public void insert(int index, IntPoint point) {
-		
 		if (index < 0 || index > getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		/**
-		 * Note: Throwing an illegal argument exception here would be illogical as indices can only be placed on the edges of already existing polygons.
-		 *		 Doing so will always result in the error of a point laying on the egde
-		 * if (PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) != null) 
-		 * 		throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point))); 
-		 */
-		vertices = PointArrays.insert(vertices, index, point);
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) == null) 
+			vertices = (PointArrays.insert(getVertices(), index, point)); 
+		else
+			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point))); 
+			
 	}
 	
 	/**
@@ -114,9 +123,12 @@ public class RoundedPolygon {
 	public void remove(int index) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		if (PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)) != null)
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.remove(getVertices(), index)) == null)
+			vertices = (PointArrays.remove(getVertices(), index));
+		else
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)));
-		vertices = PointArrays.remove(vertices, index);
+			
+		
 	}
 	
 	/**
@@ -130,14 +142,16 @@ public class RoundedPolygon {
 	 * @post The length of this array stays the same
 	 * 		| getVertices().length == old(getVertices()).length
 	 * @post the IntPoint at the given index of this PointArray has been replaced by the given IntPoint
-	 * 		| getVertices()[index] == point
+	 * 		| getVertices()[index].getX() == point.getX() && getVertices()[index].getY() == point.getY()
 	 */
 	public void update(int index, IntPoint point) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		if (PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)) != null)
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.update(getVertices(), index, point)) == null)
+			vertices = (PointArrays.update(getVertices(), index, point));
+		else
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)));
-		vertices = PointArrays.update(vertices, index, point);
+			
 	}
 	
 	/**
@@ -154,18 +168,24 @@ public class RoundedPolygon {
 				return true;
 			}
 		}
-		
+		IntPoint exitPath = new IntPoint(1000000, point.getY());
 		for (int i = 0; i < vertices.length; i++) {
 			if (i != 0 && point.isOnLineSegment(vertices[i-1], vertices[i])) 
 				return true;
 			else if (i == 0 && point.isOnLineSegment(vertices[vertices.length-1], vertices[i]))
 				return true;
 			
-			if (vertices[i].isOnLineSegment(point, new IntPoint(1000000, point.getY())))
+			if (vertices[i].isOnLineSegment(point, exitPath)) {
+				if (i == 0 && vertices[vertices.length-1].minus(point).crossProduct(exitPath.minus(point)) * vertices[i+1].minus(point).crossProduct(exitPath.minus(point)) < 0)
+					intersection++;
+				if (i == vertices.length-1 && vertices[i-1].minus(point).crossProduct(exitPath.minus(point)) * vertices[0].minus(point).crossProduct(exitPath.minus(point)) < 0)
+					intersection++;
+				if (i != 0 && i!= vertices.length-1 && vertices[i-1].minus(point).crossProduct(exitPath.minus(point)) * vertices[i+1].minus(point).crossProduct(exitPath.minus(point)) < 0)
+					intersection++;
+			}
+			if (i != 0 && IntPoint.lineSegmentsIntersect(point, exitPath, vertices[i-1], vertices[i]))
 				intersection++;
-			if (i != 0 && IntPoint.lineSegmentsIntersect(point, new IntPoint(1000000, point.getY()), vertices[i-1], vertices[i]))
-				intersection++;
-			else if(i == 0 && IntPoint.lineSegmentsIntersect(point, new IntPoint(1000000, point.getY()), vertices[vertices.length-1], vertices[i]))
+			else if(i == 0 && IntPoint.lineSegmentsIntersect(point, exitPath, vertices[vertices.length-1], vertices[i]))
 				intersection++;
 		}
 		
@@ -248,7 +268,8 @@ public class RoundedPolygon {
 				
 				result += "line " + BAStart.getX() + " " + BAStart.getY() + " " + BAc.getX() + " " + BAc.getY() + "\r\n";
 				result += "arc " + actualCentre.getX() + " " + actualCentre.getY() + " " + actualRadius + " " + startAngle + " " + extentAngle + "\r\n";
-				result += "line " + BCEnd.getX() + " " + BCEnd.getY() + " " + BCc.getX() + " " + BCc.getY() + "\r\n";			}
+				result += "line " + BCEnd.getX() + " " + BCEnd.getY() + " " + BCc.getX() + " " + BCc.getY() + "\r\n";
+				}
 
 		}
 		return result;
