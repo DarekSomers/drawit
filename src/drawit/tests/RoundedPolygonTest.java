@@ -2,6 +2,8 @@ package drawit.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.Color;
+
 import org.junit.jupiter.api.Test;
 
 import drawit.IntPoint;
@@ -33,6 +35,9 @@ class RoundedPolygonTest {
 		RoundedPolygon polly = new RoundedPolygon();
 		polly.setVertices(PointArrays.copy(vertixes));
 		polly.setRadius(5);
+		
+		poly.setColor(Color.green);
+		assert poly.getColor() == Color.green;
 		
 		//Only works without IllegalArgumentException, gives error otherwise
 		//RoundedPolygon pollly = new RoundedPolygon();

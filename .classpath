@@ -9,5 +9,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="C:/Users/Gebruiker/Documents/Uni/Informatica/OGP/drawit/drawitgui.jar"/>
+	<classpathentry kind="lib" path="drawitgui_part2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

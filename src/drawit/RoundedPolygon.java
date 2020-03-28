@@ -22,6 +22,8 @@ public class RoundedPolygon {
 	 */
 	private int rad;
 	
+	private java.awt.Color colour;
+	
 	/**
 	 * Initiates this RoundedPolygon
 	 */
@@ -48,6 +50,15 @@ public class RoundedPolygon {
 	public int getRadius() {
 		return rad;
 	}
+	
+	/**
+	 * Returns the colour of the given polygon
+	 * @return colour
+	 */
+	public java.awt.Color getColor(){
+		return colour;
+	}
+	
 	
 	/**
 	 * Sets the vertices of this RoundedPolygon to the given PointArray
@@ -83,6 +94,22 @@ public class RoundedPolygon {
 		else
 			throw new IllegalArgumentException("The radius cannot be negative.");
 	}
+	
+	/**
+	 * Sets the colour of this RoundedPolygon to the given colour
+	 * @post colour now equals the given colour
+	 * 		| getColor() == colour
+	 * @throws IllegalArgumentException when the given colour is null
+	 * 		| !(colour != null)
+	 * @param colour
+	 */
+	public void setColor(java.awt.Color colour) {
+		if (colour == null)
+			throw new IllegalArgumentException("Colour cannot be null.");
+		else
+			this.colour = colour;
+	}
+	
 	
 	/**
 	 * Inserts the given point into this vertex array at the given index
