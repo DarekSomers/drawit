@@ -1,6 +1,8 @@
 package drawit;
 
+import java.awt.Color;
 import java.lang.Math;
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 /**
@@ -98,16 +100,16 @@ public class RoundedPolygon {
 	/**
 	 * Sets the colour of this RoundedPolygon to the given colour
 	 * @post colour now equals the given colour
-	 * 		| getColor() == colour
+	 * 		| getColor() == color
 	 * @throws IllegalArgumentException when the given colour is null
 	 * 		| !(colour != null)
 	 * @param colour
 	 */
-	public void setColor(java.awt.Color colour) {
-		if (colour == null)
+	public void setColor(java.awt.Color color) {
+		if (color == null)
 			throw new IllegalArgumentException("Colour cannot be null.");
 		else
-			this.colour = colour;
+			this.colour = color;
 	}
 	
 	
@@ -231,7 +233,9 @@ public class RoundedPolygon {
 	 * Otherwise returns two "line" and one "arc" string.
 	 * @creates | result
 	 */
-	public String getDrawingCommands() {
+	@SuppressWarnings("resource")
+public String getDrawingCommands() {
+		
 		String result = "";
 		
 		if (vertices.length < 3) {
@@ -299,7 +303,16 @@ public class RoundedPolygon {
 				}
 
 		}
+		if (getColor() == null)
+			result += "fill " + 150 + " " + 0 + " " + 255 + "\r\n";
+		else if (getColor().equals(Color.red))
+			result += "fill " + 255 + " " + 0 + " " + 0 + "\r\n";
+		else if (getColor().equals(Color.green))
+			result += "fill " + 0 + " " + 255 + " " + 0 + "\r\n";
+		else if (getColor().equals(Color.blue))
+			result += "fill " + 0 + " " + 0 + " " + 255 + "\r\n";
 		return result;
+		
 		
 	}
 	
