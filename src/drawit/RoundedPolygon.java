@@ -304,7 +304,7 @@ public String getDrawingCommands() {
 
 		}
 		if (getColor() == null)
-			result += "fill " + 150 + " " + 0 + " " + 255 + "\r\n";
+			result += "fill " + 255 + " " + 255 + " " + 0 + "\r\n";
 		else if (getColor().equals(Color.red))
 			result += "fill " + 255 + " " + 0 + " " + 0 + "\r\n";
 		else if (getColor().equals(Color.green))

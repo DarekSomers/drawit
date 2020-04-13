@@ -8,8 +8,6 @@ public class Extent {
 	private int top;
 	private int right;
 	private int bottom;
-	private int width;
-	private int height;
 	
 	public int getLeft() {
 		return left;
@@ -28,11 +26,11 @@ public class Extent {
 	}
 
 	public int getWidth() {
-		return width;
+		return getRight()-getLeft();
 	}
 
 	public int getHeight() {
-		return height;
+		return getBottom() - getTop();
 	}
 	
 	public IntPoint getTopLeft() {
@@ -47,7 +45,7 @@ public class Extent {
 
 	
 	public boolean contains(IntPoint point) {
-		if (point.getX() >= getLeft() && point.getX() <= getRight() && point.getY() >= getBottom() && point.getY() <= getTop())
+		if (point.getX() >= getLeft() && point.getX() <= getRight() && point.getY() <= getBottom() && point.getY() >= getTop())
 			return true;
 		else
 			return false;
@@ -60,9 +58,7 @@ public class Extent {
 		ex.left = left;
 		ex.right = left + width;
 		ex.top = top;
-		ex.bottom = top - height;
-		ex.width = width;
-		ex.height = height;
+		ex.bottom = top + height;
 		return ex;
 	}
 	
@@ -73,8 +69,6 @@ public class Extent {
 		ex.top = top;
 		ex.right = right;
 		ex.bottom = bottom;
-		ex.width = right - left;
-		ex.height = top - bottom;
 		return ex;
 	}
 	
@@ -85,8 +79,6 @@ public class Extent {
 		ex.top = getTop();
 		ex.right = getRight();
 		ex.bottom = getBottom();
-		ex.width = getRight() - newLeft;
-		ex.height = getTop() - getBottom();
 		return ex;
 	}
 	
@@ -97,8 +89,6 @@ public class Extent {
 		ex.top = newTop;
 		ex.right = getRight();
 		ex.bottom = getBottom();
-		ex.width = getRight() - getLeft();
-		ex.height = newTop - getBottom();
 		return ex;
 	}
 	
@@ -109,8 +99,6 @@ public class Extent {
 		ex.top = getTop();
 		ex.right = newRight;
 		ex.bottom = getBottom();
-		ex.width = newRight - getLeft();
-		ex.height = getTop() - getBottom();
 		return ex;
 	}
 	
@@ -121,8 +109,6 @@ public class Extent {
 		ex.top = getTop();
 		ex.right = getRight();
 		ex.bottom = newBottom;
-		ex.width = getRight() - getLeft();
-		ex.height = getTop() - newBottom;
 		return ex;
 	}
 	
@@ -133,8 +119,6 @@ public class Extent {
 		ex.top = getTop();
 		ex.right = getLeft() + newWidth;
 		ex.bottom = getBottom();
-		ex.width = newWidth;
-		ex.height = getTop() - getBottom();
 		return ex;
 	}
 	
@@ -144,9 +128,7 @@ public class Extent {
 		ex.left = getLeft();
 		ex.top = getTop();
 		ex.right = getRight();
-		ex.bottom = getTop() - newHeight;
-		ex.width = getRight() - getLeft();
-		ex.height = newHeight;
+		ex.bottom = getTop() + newHeight;
 		return ex;
 	}
 	
