@@ -1,5 +1,6 @@
 package drawit.shapegroups1;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,12 +190,12 @@ public class ShapeGroup {
 		double translateY = 0;
 		while (Pgroup.parent != null) {
 			Pgroup = Pgroup.parent;
-			//scaleX += (double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth();
-			translateX += (double)(innerCoordinates.getX() + translateX - Pgroup.getOriginalExtent().getLeft()) * 
-					((double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth()) + Pgroup.getExtent().getLeft() - innerCoordinates.getX() - translateX;
-			//scaleY += (double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight();
-			translateY += (double)(innerCoordinates.getY() + translateY - Pgroup.getOriginalExtent().getTop()) * 
-					((double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight()) + Pgroup.getExtent().getTop() - innerCoordinates.getY() - translateY;
+			scaleX *= (double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth();
+			translateX += (double)(getExtent().getLeft() + translateX - Pgroup.getOriginalExtent().getLeft()) * 
+					((double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth()) + Pgroup.getExtent().getLeft() - getExtent().getLeft() - translateX;
+			scaleY *= (double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight();
+			translateY += (double)(getExtent().getTop() + translateY - Pgroup.getOriginalExtent().getTop()) * 
+					((double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight()) + Pgroup.getExtent().getTop() - getExtent().getTop() - translateY;
 		}
 		
 		if (Pgroup != this) {
@@ -278,11 +279,11 @@ public class ShapeGroup {
 		int i = 0;
 		while (this != parent.children[i])
 			i++;
-		while (i < getSubgroupCount()-1) {
-			parent.children[i] = parent.children[i+1];
-			i++;
+		while (i > 0) {
+			parent.children[i] = parent.children[i-1];
+			i--;
 		}
-		parent.children[parent.children.length-1] = this;
+		parent.children[0] = this;
 	}
 	
 	
@@ -291,11 +292,12 @@ public class ShapeGroup {
 		int i = 0;
 		while (this != parent.children[i])
 			i++;
-		while (i > 0) {
-			parent.children[i] = parent.children[i-1];
-			i--;
+		while (i < parent.getSubgroupCount()-1) {
+			parent.children[i] = parent.children[i+1];
+			i++;
 		}
-		parent.children[0] = this;
+		parent.children[parent.children.length-1] = this;
+		
 	}
 
 	
@@ -333,18 +335,18 @@ public class ShapeGroup {
 	public java.lang.String drawNonLeaf(ShapeGroup subgroup) {
 		String result = "";
 		
-		for (ShapeGroup child: subgroup.children) {
-			if (child.leaf == null) {
-				result += push(child);
-				for (ShapeGroup grandChild: child.children)
-					result += drawNonLeaf(child);
+		for (int i = subgroup.getSubgroupCount()-1; i >= 0; i--) {
+			if (subgroup.children[i].leaf == null) {
+				result += push(subgroup.children[i]);
+				for (ShapeGroup grandChild: subgroup.children[i].children)
+					result += drawNonLeaf(subgroup.children[i]);
 				result += "popTransform \r\n";
 				result += "popTransform \r\n";
 
 			}
 			else {	
-				result += push(child);
-				result += child.leaf.getDrawingCommands();
+				result += push(subgroup.children[i]);
+				result += subgroup.children[i].leaf.getDrawingCommands();
 				result += "popTransform \r\n";
 				result += "popTransform \r\n";
 			}

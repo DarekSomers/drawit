@@ -2,7 +2,6 @@ package drawit;
 
 import java.awt.Color;
 import java.lang.Math;
-import java.util.Scanner;
 import java.util.stream.IntStream;
 
 /**
@@ -33,6 +32,7 @@ public class RoundedPolygon {
 		IntPoint[] Initializer = {new IntPoint(0,0), new IntPoint(1,0), new IntPoint(1,1), new IntPoint(0,1)};
 		this.vertices = Initializer;
 		this.rad = 0;
+		setColor(Color.yellow);
 	}
 
 	/**
@@ -303,7 +303,7 @@ public String getDrawingCommands() {
 				}
 
 		}
-		if (getColor() == null)
+		if (getColor().equals(Color.yellow))
 			result += "fill " + 255 + " " + 255 + " " + 0 + "\r\n";
 		else if (getColor().equals(Color.red))
 			result += "fill " + 255 + " " + 0 + " " + 0 + "\r\n";
