@@ -3,8 +3,13 @@ package drawit.shapegroups2;
 import drawit.IntPoint;
 import drawit.RoundedPolygon;
 
-public class LeafShapeGroup extends ShapeGroup {
 
+/**
+ * Each instance of this class represents a ShapeGroup containing a RoundedPolygon object
+ * @invar For every LeafShapeGroup, leaf is not null
+ * 		| getShape() != null
+ */
+public class LeafShapeGroup extends ShapeGroup {
 	
 	/**
 	 * Contains the leaf RoundedPolygon object
@@ -15,6 +20,10 @@ public class LeafShapeGroup extends ShapeGroup {
 	
 	/**
 	 * Initializes the ShapeGroup with the extent created from the vertices of the given shape/RoundedPolygon
+	 * @pre shape is not null
+	 * 		| shape != null
+	 * @creates | thisExtent
+	 * @inspects | getShape().getVertices()
 	 */
 	public LeafShapeGroup(RoundedPolygon shape) {
 		leaf = shape;
@@ -37,7 +46,7 @@ public class LeafShapeGroup extends ShapeGroup {
 	}
 	
 	/**
-	 * Returns the shape directly contained by this ShapeGroup or null if this is a nonLeaf ShapeGroup
+	 * Returns the shape directly contained by this ShapeGroup 
 	 * @return leaf
 	 */
 	public RoundedPolygon getShape() {
@@ -46,10 +55,10 @@ public class LeafShapeGroup extends ShapeGroup {
 	
 	
 	/**
-	 * Returns a textual representation of a sequence of drawing commands for drawing the shapes contained directly or indirectly
-	 * by this ShapeGroup expressed in this ShapeGroups outercoordinate system
-	 * @post contains all of the drawing commands for all leaf and nonLeaf ShapeGroups
+	 * Returns the textual representation of the LeafShapeGroup and by extent the RoundedPolygon object
+	 * @post contains the drawing commands for only this LeafShapeGroup and its RoundedPolygon
 	 */
+	@Override
 	public java.lang.String getDrawingCommands(){
 		
 
@@ -64,7 +73,4 @@ public class LeafShapeGroup extends ShapeGroup {
 
 		return result;
 	}
-	
-	
-	
 }

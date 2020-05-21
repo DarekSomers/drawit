@@ -15,29 +15,22 @@ import logicalcollections.LogicalList;
 
 
 /**
+ * Each instance of a ShapeGroup is either a LeafShapeGroup, containing a RoundedPolygon object, or a NonleafShapeGroup,
+ * containing multiple ShapeGroup objects.
+ * @invar A shapeGroup is either a LeafShapGroup or a NonleafShapegroup
+ * 		| (ShapeGroup instanceof LeafShapeGroup || ShapeGroup instanceof NonleafShapeGroup) && 
+ * 		| !(ShapeGroup instanceof LeafShapeGroup && ShapeGroup instanceof NonleafShapeGroup)
  * @invar this Shapegroup does not have the same ShapeGroup as a child twice
  * 		|  LogicalList.distinct(((NonleafShapeGroup) this).getSubgroups())
  * @invar this ShapeGroup's children have this ShapeGroup as their parent
- * 		|  getSubgroups().stream().allMatch(child -> child.getParentGroup() == this)
+ * 		|  ((NonleafShapeGroup) this).getSubgroups().stream().allMatch(child -> child.getParentGroup() == this)
  * @invar this Shapegroup is a root ShapeGroup or else it is among parent's children
  * 		|  getParentGroup() == null || getParentGroup().getSubgroups().contains(this)
  * @invar this Shapegroup does not have itself as an ancestor
- * 		|  !getSubgroups().contains(this)
+ * 		|  !((NonleafShapeGroup) this).getSubgroups().contains(this)
  */
 public abstract class ShapeGroup {
 	
-//	/**
-//	 * Contains the leaf RoundedPolygon object
-//	 * @invar leaf is null when nonLeaf is not null and vice versa
-//	 * 		| (nonLeaf == null && leaf != null) || (leaf == null && nonLeaf != null)
-//	 */
-//	private RoundedPolygon leaf;
-//	/**
-//	 * Contains the nonLeaf object
-//	 * @invar nonLeaf is null when leaf is not null and vice versa
-//	 * 		| (nonLeaf == null && leaf != null) || (leaf == null && nonLeaf != null)
-//	 */
-//	private ShapeGroup[] nonLeaf;
 	/**
 	 * Contains the original extent when initializing the ShapeGroup
 	 * @invar The extent cannot be null
@@ -58,11 +51,10 @@ public abstract class ShapeGroup {
 	private Extent prevEx;
 	/**
 	 * Contains the parent ShapeGroup of this ShapeGroup
+	 * 
 	 */
 	private NonleafShapeGroup parent;
-	/**
-	 * Contains an array of the child ShapeGroups of this ShapeGroup
-	 */
+
 	
 	
 	
@@ -83,40 +75,6 @@ public abstract class ShapeGroup {
 	 */
 	private double changeYb = 0;
 
-
-	
-	
-//	/**
-//	 * Initializes the ShapeGroup with the extent created from the vertices of the given shape/RoundedPolygon
-//	 */
-//	
-//	/**
-//	 * Initializes the ShapeGroup with the extent created from the values of the given extents contained in the ShapeGroup array 
-//	 * And also assigns the children and parent objects
-//	 */
-//	public ShapeGroup(ShapeGroup[] subgroups) {
-//		nonLeaf = subgroups;
-//		ShapeGroup[] subgroup = nonLeaf;
-//		int minX = subgroup[0].getExtent().getLeft();
-//		int maxX = subgroup[0].getExtent().getRight();
-//		int minY = subgroup[0].getExtent().getBottom();
-//		int maxY = subgroup[0].getExtent().getTop();
-//		children = new ShapeGroup[getSubgroupCount()];
-//		for (int i = 0; i < getSubgroupCount(); i++) {
-//			children[i] = getSubgroup(i);
-//			children[i].parent = this;
-//			if (children[i].getExtent().getLeft() < minX)
-//				minX = children[i].getExtent().getLeft();
-//			if (children[i].getExtent().getRight() > maxX)
-//				maxX = children[i].getExtent().getRight();
-//			if (children[i].getExtent().getTop() < minY)
-//				minY = children[i].getExtent().getTop();
-//			if (children[i].getExtent().getBottom() > maxY)
-//				maxY = children[i].getExtent().getBottom();
-//		}
-//		setExtent(Extent.ofLeftTopRightBottom(minX, minY, maxX, maxY));
-//	}
-	
 	
 	/**
 	 * Returns the extent of the ShapeGroup expressed in its outer coordinate system
@@ -155,73 +113,16 @@ public abstract class ShapeGroup {
 			return parent;
 	}
 	
+	/**
+	 * Sets the parent of this ShapeGroup
+	 * @pre newParent is not null
+	 * 		| newParent != null
+	 * @post this ShapeGroup's parent is now set to newParent
+	 * 		| this.getParentGroup() == newParent
+	 */
 	public void setParent(NonleafShapeGroup newParent) {
 		parent = newParent;
 	}
-	
-//	/**
-//	 * Returns the ShapeGroups that are directly contained by this ShapeGroup or null if no shapeGroups are directly contained by this ShapeGroup
-//	 * @return parent
-//	 */
-//	public ShapeGroup[] getChildren() {
-//		if (children == null)
-//			return null;
-//		return children;
-//	}
-	
-//	/**
-//	 * Returns the shape directly contained by this ShapeGroup or null if this is a nonLeaf ShapeGroup
-//	 * @return leaf
-//	 */
-//	public RoundedPolygon getShape() {
-//		if (nonLeaf != null)
-//			return null;
-//		else
-//			return leaf;
-//	}
-//	
-//	public void setShape(RoundedPolygon newShape) {
-//		this.leaf = newShape;
-//	}
-	
-//	/**
-//	 * Returns the list of subgroups of this ShapeGroup or null if this is a leaf ShapeGroup
-//	 * @return list || null
-//	 * @post contains the child ShapeGroups from the nonLeaf array
-//	 * 		| result.stream().allMatch(child -> IntStream.range(0, getSubgroupCount()).allMatch(i -> getChildren()[i] == child))
-//	 */
-//	public java.util.List<ShapeGroup> getSubgroups(){
-//		if (leaf != null)
-//			return null;
-//		else {
-//			List<ShapeGroup> list = new ArrayList<ShapeGroup>();
-//			for (ShapeGroup shape: nonLeaf) 
-//				list.add(shape);
-//			return list;
-//		}
-//	}
-	
-	
-//	/**
-//	 * Returns the number of subgroups of this nonLeaf ShapeGroup
-//	 * @return nonLeaf.length
-//	 */
-//	public int getSubgroupCount() {
-//		return nonLeaf.length;
-//	}
-	
-	
-//	/**
-//	 * Returns the subgroup at the given 0-based index in this nonLeaf ShapeGroup's list of subgroups
-//	 * @return return nonLeaf[index]
-//	 */
-//	public ShapeGroup getSubgroup(int index) {
-//		if (index >= nonLeaf.length)
-//			throw new IllegalArgumentException("Index out of bounds");
-//		else
-//			return nonLeaf[index];
-//	}
-	
 	
 	
 	/**
@@ -230,8 +131,8 @@ public abstract class ShapeGroup {
 	 * @post Undoes all of the scalings of this ShapeGroup's extent compared to its original extent and translations of this ShapeGroup and its ancestors extent compared to its original extent
 	 */
 	public IntPoint toInnerCoordinates(IntPoint globalCoordinates) {
-		double newX;
-		double newY;
+		double newX = globalCoordinates.getX();
+		double newY = globalCoordinates.getY();
 		ShapeGroup Pgroup = this;
 		double scaleX = (double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth();
 		double scaleY = (double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight();
@@ -239,10 +140,8 @@ public abstract class ShapeGroup {
 		double translateY = 0;
 		while (Pgroup.parent != null) {
 			Pgroup = Pgroup.parent;
-			//scaleX *= (double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth();
 			translateX += (double)(globalCoordinates.getX() + translateX - Pgroup.getExtent().getLeft()) / 
 					((double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth()) + Pgroup.getOriginalExtent().getLeft() - globalCoordinates.getX() - translateX;
-			//scaleY *= (double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight();
 			translateY += (double)(globalCoordinates.getY() + translateY - Pgroup.getExtent().getTop()) / 
 					((double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight()) + Pgroup.getOriginalExtent().getTop() - globalCoordinates.getY() - translateY;
 		}
@@ -272,8 +171,8 @@ public abstract class ShapeGroup {
 	 * @post Excecutes all the transformations of this ShapeGroup's and its ancestors's extent compared to their original extent
 	 */
 	public IntPoint toGlobalCoordinates(IntPoint innerCoordinates) {
-		double newX;
-		double newY;
+		double newX = innerCoordinates.getX();
+		double newY = innerCoordinates.getY();
 		ShapeGroup Pgroup = this;
 		double scaleX = (double)newEx.getWidth() / ex.getWidth();
 		double scaleY = (double)newEx.getHeight() / ex.getHeight();
@@ -311,7 +210,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the coordinates in this ShapeGroup's innercoordinate system of the vector whose coordinates in the globalcoordinate system are the given coordinates
 	 * @return innerCoordinates
-	 * @post scales the IntVectors of all objects with the scaling of the extent and its ancestors
+	 * @post scales the IntVectors of all objects with the scaling of the extent of its ancestors
 	 */
 	public IntVector toInnerCoordinates(IntVector globalCoordinates) {
 		double widthChange = 1;
@@ -328,21 +227,6 @@ public abstract class ShapeGroup {
 				(int)(globalCoordinates.getY() / heightChange));
 		return innerCoordinates;
 	}
-	
-	
-//	/**
-//	 * Returns the first subgroup in this nonLeaf ShapeGroup's list of subgroups whose extent cointains the given point expressed in this ShapeGroup's innercoordinates system 
-//	 * @return child || null
-//	 * @post Returns the first child that contains the given point, else returns null
-//	 * 		//| getChildren().stream().firstMatch(child -> child.getExtent().contains(innerCoordinates)) || result == null
-//	 */
-//	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
-//		for (ShapeGroup child: getSubgroups()) {
-//			if (child.newEx.contains(innerCoordinates))
-//				return child;
-//		}
-//		return null;
-//	}
 	
 	
 	/**
@@ -412,33 +296,6 @@ public abstract class ShapeGroup {
 	 */
 	public abstract java.lang.String getDrawingCommands();
 	
-	
-//	/**
-//	 * Specific drawing commands for nonLeaf ShapeGroups
-//	 * @post contains all drawing commands for all leaf ShapeGroups inside all nonLeaf ShapeGroups
-//	 */
-//	public java.lang.String drawNonLeaf(ShapeGroup subgroup) {
-//		String result = "";
-//		
-//		for (int i = subgroup.getSubgroupCount()-1; i >= 0 ; i--) {
-//			if (subgroup.children[i].leaf == null) {
-//				result += push(subgroup.children[i]);
-//				for (ShapeGroup grandChild: subgroup.children[i].children)
-//					result += drawNonLeaf(subgroup.children[i]);
-//				result += "popTransform \r\n";
-//				result += "popTransform \r\n";
-//
-//			}
-//			else {	
-//				result += push(subgroup.children[i]);
-//				result += subgroup.children[i].leaf.getDrawingCommands();
-//				result += "popTransform \r\n";
-//				result += "popTransform \r\n";
-//			}
-//		}
-//		
-//		return result;
-//	}
 	
 	
 	/**

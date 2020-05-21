@@ -3,10 +3,16 @@ package drawit.shapegroups2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import drawit.IntPoint;
 
 
+/**
+ * Each instance of this class represents a ShapeGroup containing a ShapeGroup array
+ * @invar For every NonleafShapeGroup object, nonleaf is not null
+ * 		| getNonleaf != null
+ */
 public class NonleafShapeGroup extends ShapeGroup {
 
 	
@@ -31,17 +37,15 @@ public class NonleafShapeGroup extends ShapeGroup {
 		int minY = subgroup[0].getExtent().getBottom();
 		int maxY = subgroup[0].getExtent().getTop();
 		
-		//children = new ShapeGroup[getSubgroupCount()];
-		setFirst(getSubgroup(0));
-		setLast(getSubgroup(getSubgroupCount()-1));
+		setFirst(nonLeaf[0]);
+		setLast(nonLeaf[getSubgroupCount()-1]);
 		
 		for (int i = 0; i < getSubgroupCount(); i++) {
-			//children[i] = getSubgroup(i);
-			getSubgroup(i).setParent(this);
+			nonLeaf[i].setParent(this);
 			if (i > 0)
-				getSubgroup(i).setPrevious(getSubgroup(i-1));
+				nonLeaf[i].setPrevious(getSubgroup(i-1));
 			if (i < getSubgroupCount()-1)
-				getSubgroup(i).setNext(getSubgroup(i+1));
+				nonLeaf[i].setNext(nonLeaf[i+1]);
 			
 			if (getSubgroup(i).getExtent().getLeft() < minX)
 				minX = getSubgroup(i).getExtent().getLeft();
@@ -56,11 +60,19 @@ public class NonleafShapeGroup extends ShapeGroup {
 	}
 	
 	/**
+	 * Returns an array of this ShapeGroup's children
+	 * @return nonLeaf
+	 */
+	public ShapeGroup[] getNonleaf() {
+		return nonLeaf;
+	}
+	
+	
+	/**
 	 * Returns the list of subgroups of this ShapeGroup or null if this is a leaf ShapeGroup
 	 * @return list || null
 	 * @post contains the child ShapeGroups from the nonLeaf array
-	 * getSubgroups().stream().allMatch(child -> child == 
-	 * 		
+	 * @creates | result
 	 */
 	public java.util.List<ShapeGroup> getSubgroups(){
 		List<ShapeGroup> list = new ArrayList<ShapeGroup>();
@@ -84,7 +96,8 @@ public class NonleafShapeGroup extends ShapeGroup {
 	/**
 	 * Returns the subgroup at the given 0-based index in this nonLeaf ShapeGroup's list of subgroups
 	 * @return return nonLeaf[index]
-	 * 
+	 * @throws IllegalArgumentException when the index is greater than the array's length
+	 * 		| !(index >= getSubgroupCount())
 	 */
 	public ShapeGroup getSubgroup(int index) {
 		if (index >= nonLeaf.length)
@@ -109,7 +122,8 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * Returns the first subgroup in this nonLeaf ShapeGroup's list of subgroups whose extent cointains the given point expressed in this ShapeGroup's innercoordinates system 
 	 * @return child || null
 	 * @post Returns the first child that contains the given point, else returns null
-	 * 		//| getChildren().stream().firstMatch(child -> child.getExtent().contains(innerCoordinates)) || result == null
+	 * 		|  result == null || result == getSubgroups().stream().filter(child -> child.getExtent().contains(innerCoordinates)).findFirst().get()
+	 * @inspects | getSubgroups()
 	 */
 	public ShapeGroup getSubgroupAt(IntPoint innerCoordinates) {
 		for (ShapeGroup child: getSubgroups()) {
@@ -152,6 +166,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * by this ShapeGroup expressed in this ShapeGroups outercoordinate system
 	 * @post contains all of the drawing commands for all leaf and nonLeaf ShapeGroups
 	 */
+	@Override
 	public java.lang.String getDrawingCommands(){
 		
 

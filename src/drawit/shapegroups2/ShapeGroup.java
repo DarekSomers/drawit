@@ -9,14 +9,19 @@ import drawit.RoundedPolygon;
 
 
 /**
+ * Each instance of a ShapeGroup is either a LeafShapeGroup, containing a RoundedPolygon object, or a NonleafShapeGroup,
+ * containing multiple ShapeGroup objects.
+ * @invar A shapeGroup is either a LeafShapGroup or a NonleafShapegroup
+ * 		| (ShapeGroup instanceof LeafShapeGroup || ShapeGroup instanceof NonleafShapeGroup) && 
+ * 		| !(ShapeGroup instanceof LeafShapeGroup && ShapeGroup instanceof NonleafShapeGroup)
  * @invar this Shapegroup does not have the same ShapeGroup as a child twice
- * 		//|  LogicalList.distinct(getSubgroups())
+ * 		|  LogicalList.distinct(((NonleafShapeGroup) this).getSubgroups())
  * @invar this ShapeGroup's children have this ShapeGroup as their parent
- * 		|  getSubgroups().stream().allMatch(child -> child.getParentGroup() == this)
+ * 		|  ((NonleafShapeGroup) this).getSubgroups().stream().allMatch(child -> child.getParentGroup() == this)
  * @invar this Shapegroup is a root ShapeGroup or else it is among parent's children
  * 		|  getParentGroup() == null || getParentGroup().getSubgroups().contains(this)
  * @invar this Shapegroup does not have itself as an ancestor
- * 		|  !getSubgroups().contains(this)
+ * 		|  !((NonleafShapeGroup) this).getSubgroups().contains(this)
  */
 public abstract class ShapeGroup {
 	
@@ -43,7 +48,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Contains the parent ShapeGroup of this ShapeGroup
 	 */
-	private ShapeGroup parent;
+	private NonleafShapeGroup parent;
 	
 	/**
 	 * Contains the first ShapeGroup contained in parent's subgroups list or null when it's empty
@@ -108,47 +113,93 @@ public abstract class ShapeGroup {
 	 * @post if parent is null, the given ShapeGroup is a root ShapeGroup
 	 * 		| result == null || result != null
 	 */
-	public ShapeGroup getParentGroup() {
+	public NonleafShapeGroup getParentGroup() {
 		return parent;
 	}
 	
-	
-	public void setParent(ShapeGroup newParent) {
+	/**
+	 * Sets the parent of this ShapeGroup
+	 * @pre newParent is not null
+	 * 		| newParent != null
+	 * @post this ShapeGroup's parent is now set to newParent
+	 * 		| this.getParentGroup() == newParent
+	 */
+	public void setParent(NonleafShapeGroup newParent) {
 		this.parent = newParent;
 	}
 	
-	
+	/**
+	 * Return the first element of the children's array
+	 * @return first
+	 */
 	public ShapeGroup getFirst() {
 		return first;
 	}
 	
+	/**
+	 * Sets the given ShapeGroup as the first element of this ShapeGroup's children array
+	 * @pre newFirst is not null
+	 * 		| newFirst != null
+	 * @post This ShapeGroup's children array's first element equals the given ShapeGroup
+	 * 		| getFirst() == newFirst
+	 */
 	public void setFirst(ShapeGroup newFirst) {
 		this.first = newFirst;
 	}
 	
-	
+	/**
+	 * Return the last element of the children array
+	 * @return last
+	 */
 	public ShapeGroup getLast() {
 		return last;
 	}
 	
+	/**
+	 * Sets the given ShapeGroup as the last element of this ShapeGroup's children's array
+	 * @pre newLast is not null
+	 * 		| newLast != null
+	 * @post This ShapeGroup's children array's last element equals the given ShapeGroup
+	 * 		| getLast() == newLast
+	 */
 	public void setLast(ShapeGroup newLast) {
 		this.last = newLast;
 	}
 	
-	
+	/**
+	 * Return the next element of the children array
+	 * @return next
+	 */
 	public ShapeGroup getNext() {
 		return next;
 	}
 
+	/**
+	 * Sets the given ShapeGroup as the next element of this ShapeGroup's children array with respect to this ShapeGroup
+	 * @pre newNext is not null
+	 * 		| newNext != null
+	 * @post This ShapeGroup's children array's next element equals the given ShapeGroup
+	 * 		| getNext() == newNext
+	 */
 	public void setNext(ShapeGroup newNext) {
 		this.next = newNext;
 	}
 	
-	
+	/**
+	 * Return the previous element of the children's array
+	 * @return previous
+	 */
 	public ShapeGroup getPrevious() {
 		return previous;
 	}
 	
+	/**
+	 * Sets the given ShapeGroup as the previous element of this ShapeGroup children array with respect to this ShapeGroup
+	 * @pre newPrev is not null
+	 * 		| newPrev != null
+	 * @post This ShapeGroup's children array's previous element equals the given ShapeGroup
+	 * 		| getPrevious() == newPrev
+	 */
 	public void setPrevious(ShapeGroup newPrev) {
 		this.previous = newPrev;
 	}
@@ -292,19 +343,19 @@ public abstract class ShapeGroup {
 	 * 		
 	 */
 	public void bringToFront() {
-		if (this != parent.first) {
+		if (this != parent.getFirst()) {
 			if (next != null) {
 				previous.next = next;
 				next.previous = previous;
 			}
 			else {
 				previous.next = null;
-				parent.last = previous;
+				parent.setLast(previous);
 			}
-			parent.first.previous = this;
-			next = parent.first;
+			parent.getFirst().previous = this;
+			next = parent.getFirst();
 			previous = null;
-			parent.first = this;
+			parent.setFirst(this);
 		}
 	}
 	
@@ -318,19 +369,19 @@ public abstract class ShapeGroup {
 	 * 		
 	 */
 	public void sendToBack() {
-		if (this != parent.last) {
+		if (this != parent.getLast()) {
 			if (previous != null) {
 				previous.next = next;
 				next.previous = previous;
 			}
 			else {
 				next.previous = null;
-				parent.first = next;
+				parent.setFirst(getNext());
 			}
-			parent.last.next = this;
-			previous = parent.last;
+			parent.getLast().next = this;
+			previous = parent.getLast();
 			next = null;
-			parent.last = this;
+			parent.setLast(this);
 		}
 	}
 

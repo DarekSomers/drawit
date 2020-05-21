@@ -40,14 +40,20 @@ public class ShapeGroupShape implements Shape {
 	@Override
 	public IntPoint toShapeCoordinates(IntPoint p) {
 	
-			return shapegroup.toInnerCoordinates(p);
+		if (shapegroup.getParentGroup() == null)
+			return p;
+		else
+			return shapegroup.getParentGroup().toInnerCoordinates(p);
 
 	}
 
 	@Override
 	public IntPoint toGlobalCoordinates(IntPoint p) {
 		
-			return shapegroup.toGlobalCoordinates(p);
+		if (shapegroup.getParentGroup() == null)
+			return p;
+		else
+			return shapegroup.getParentGroup().toGlobalCoordinates(p);
 		
 	}
 

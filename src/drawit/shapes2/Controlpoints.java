@@ -59,40 +59,35 @@ public class Controlpoints implements ControlPoint {
 
 	@Override
 	public void move(IntVector delta) {
-		IntPoint pointy;
+		IntPoint pointy = point;
 		DoubleVector deltor = delta.asDoubleVector();
 		if (polygon != null) {
 			if (shape!=null) {
-				delta.setX((int) (deltor.getX()/ (double) shape.getExtent().getWidth() * (double) shape.getOriginalExtent().getWidth()));
-				delta.setY((int) (deltor.getY()/ (double) shape.getExtent().getHeight() * (double) shape.getOriginalExtent().getHeight()));
+				delta.setX((int) ((double) deltor.getX()/ (double) (shape.getExtent().getWidth() / (double) shape.getOriginalExtent().getWidth())));
+				delta.setY((int) ((double) deltor.getY()/ (double) (shape.getExtent().getHeight() / (double) shape.getOriginalExtent().getHeight())));
 				pointy = point.plus(shape.toInnerCoordinates(delta));
 			}
 			else
 				pointy = point.plus(delta);
-			//IntPoint[] newVertices = new IntPoint[polygon.getVertices().length];
 			for (int i = 0; i < polygon.getVertices().length; i++) {
 				if (i == index) {
 					polygon.update(i, pointy);
-//					newVertices[i] = point.plus(delta);
 					
 				}
-//				else
-//					newVertices[i] = polygon.getVertices()[i];
 			}
-			//polygon.setVertices(newVertices);
 		}
 		
 		else {
 			pointy = point.plus(shape.toInnerCoordinates(delta));
-			if (index == 0)
+			if (index == 0) {
 				shape.setExtent(Extent.ofLeftTopRightBottom(pointy.getX(), pointy.getY(), 
 						shape.getExtent().getRight(), shape.getExtent().getBottom()));
-			else
+			}
+			else {
 				shape.setExtent(Extent.ofLeftTopRightBottom(shape.getExtent().getLeft(), shape.getExtent().getTop(), 
 						pointy.getX(), pointy.getY()));
+			}
 		}
-		
-		
 	}
 
 }
