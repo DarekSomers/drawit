@@ -21,7 +21,9 @@ public class DoubleVector {
 	}
 	
 	public double getX() {return this.x;}
+	public void setX(double newX) {this.x = newX;}
 	public double getY() {return this.y;}
+	public void setY(double newY) {this.y = newY;}
 	
 	// Nog niet zeker!
 	/**
@@ -84,7 +86,9 @@ public class DoubleVector {
 	public double asAngle() {
 		double result = Math.atan2(this.y, this.x);
 		return result;
-	}	
+	}
+
+
 	
 		
 	

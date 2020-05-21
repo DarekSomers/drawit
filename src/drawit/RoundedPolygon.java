@@ -2,6 +2,7 @@ package drawit;
 
 import java.awt.Color;
 import java.lang.Math;
+import java.lang.reflect.Array;
 import java.util.stream.IntStream;
 
 /**
@@ -25,6 +26,10 @@ public class RoundedPolygon {
 	
 	private java.awt.Color colour;
 	
+	
+	private int[] boundingBox = new int[4];
+	
+	
 	/**
 	 * Initiates this RoundedPolygon
 	 */
@@ -33,12 +38,14 @@ public class RoundedPolygon {
 		this.vertices = Initializer;
 		this.rad = 0;
 		setColor(Color.yellow);
+		BoundingBox();
+		boundingBox = getBox();
 	}
 
 	/**
 	 * Returns a copy of the array of vertices of the RoundedPolygon
 	 * @throws IllegalArgumentException when the given PointArray is null
-	 * 		|!(vertices == null)
+	 * 		|!(getVertices() == null)
 	 * @return PointArrays.copy(vertices)
 	 */
 	public IntPoint[] getVertices() {
@@ -74,7 +81,7 @@ public class RoundedPolygon {
 		vertices = newVertices;
 		if (PointArrays.checkDefinesProperPolygon(newVertices) != null) 
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(newVertices));
-			
+		BoundingBox();
 			
 	}
 	
@@ -102,7 +109,7 @@ public class RoundedPolygon {
 	 * @post colour now equals the given colour
 	 * 		| getColor() == color
 	 * @throws IllegalArgumentException when the given colour is null
-	 * 		| !(colour != null)
+	 * 		| getColor() == null
 	 * @param colour
 	 */
 	public void setColor(java.awt.Color color) {
@@ -116,11 +123,11 @@ public class RoundedPolygon {
 	/**
 	 * Inserts the given point into this vertex array at the given index
 	 * @mutates | this
-	 * @invar | index != null
+	 * @mutates | getBox()
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index > getVertices().length)
 	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
-	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) != null)
+	 * 		|PointArrays.checkDefinesProperPolygon(PointArrays.insert(getVertices(), index, point)) == null
 	 * @post The length of this array is increased by one
 	 * 		| getVertices().length == old(getVertices()).length+1
 	 * @post the given IntPoint has been inserted into this PointArray at the given index
@@ -129,8 +136,10 @@ public class RoundedPolygon {
 	public void insert(int index, IntPoint point) {
 		if (index < 0 || index > getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		if (PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) == null) 
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point)) == null) {
 			vertices = (PointArrays.insert(getVertices(), index, point)); 
+			BoundingBox();
+		}
 		else
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.insert(vertices, index, point))); 
 			
@@ -139,11 +148,11 @@ public class RoundedPolygon {
 	/**
 	 * removes the point at the given index from this vertex array
 	 * @mutates | this
-	 * @invar | index != null
+	 * @mutates | getBox()
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
 	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
-	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)) != null)
+	 * 		|PointArrays.checkDefinesProperPolygon(PointArrays.remove(getVertices(), index)) == null
 	 * @post The length of this array is reduced by one
 	 * 		| getVertices().length == old(getVertices()).length-1
 	 * @post the IntPoint at the given index has been removed from this PointArray
@@ -152,8 +161,10 @@ public class RoundedPolygon {
 	public void remove(int index) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		if (PointArrays.checkDefinesProperPolygon(PointArrays.remove(getVertices(), index)) == null)
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.remove(getVertices(), index)) == null) {
 			vertices = (PointArrays.remove(getVertices(), index));
+			BoundingBox();
+		}
 		else
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.remove(vertices, index)));
 			
@@ -163,11 +174,11 @@ public class RoundedPolygon {
 	/**
 	 * Replaces the point at the given index of this vertex array by another
 	 * @mutates | this
-	 * @invar | index != null
+	 * @mutates | getBox()
 	 * @throws IllegalArgumentException if the index goes out of the bounds of the IntPoint[] object
 	 * 		| !(index < 0 || index >= getVertices().length)
 	 * @throws IllegalArgumentException when the given vertices don't define a proper polygon
-	 * 		|!(PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)) != null)
+	 * 		|PointArrays.checkDefinesProperPolygon(PointArrays.update(getVertices(), index, point)) == null
 	 * @post The length of this array stays the same
 	 * 		| getVertices().length == old(getVertices()).length
 	 * @post the IntPoint at the given index of this PointArray has been replaced by the given IntPoint
@@ -176,8 +187,10 @@ public class RoundedPolygon {
 	public void update(int index, IntPoint point) {
 		if (index < 0 || index >= getVertices().length)
 			throw new IllegalArgumentException("Index out of bounds.");
-		if (PointArrays.checkDefinesProperPolygon(PointArrays.update(getVertices(), index, point)) == null)
+		if (PointArrays.checkDefinesProperPolygon(PointArrays.update(getVertices(), index, point)) == null) {
 			vertices = (PointArrays.update(getVertices(), index, point));
+			BoundingBox();
+		}
 		else
 			throw new IllegalArgumentException(PointArrays.checkDefinesProperPolygon(PointArrays.update(vertices, index, point)));
 			
@@ -230,11 +243,10 @@ public class RoundedPolygon {
 	 * @post Returns a string ("line" and possibly "arc") containing the drawing commands to draw this RoundedPolygon.
 	 * Returns an empty string when there are less than 3 vertices.
 	 * Returns two "line" strings when the three vertexes are colinear.
-	 * Otherwise returns two "line" and one "arc" string.
-	 * @creates | result
+	 * Otherwise returns two "line" and one "arc" strings.
 	 */
-	@SuppressWarnings("resource")
-public String getDrawingCommands() {
+
+	public String getDrawingCommands() {
 		
 		String result = "";
 		
@@ -303,17 +315,50 @@ public String getDrawingCommands() {
 				}
 
 		}
-		if (getColor().equals(Color.yellow))
-			result += "fill " + 255 + " " + 255 + " " + 0 + "\r\n";
-		else if (getColor().equals(Color.red))
-			result += "fill " + 255 + " " + 0 + " " + 0 + "\r\n";
-		else if (getColor().equals(Color.green))
-			result += "fill " + 0 + " " + 255 + " " + 0 + "\r\n";
-		else if (getColor().equals(Color.blue))
-			result += "fill " + 0 + " " + 0 + " " + 255 + "\r\n";
+		result += "fill " + colour.getRed() + " " + colour.getGreen() + " " + colour.getBlue() + "\r\n";
 		return result;
 		
 		
 	}
 	
+
+
+	public void BoundingBox() {
+			int minX = getVertices()[0].getX();
+			int maxX = getVertices()[0].getX();
+			int minY = getVertices()[0].getY();
+			int maxY = getVertices()[0].getY();
+			
+			for (IntPoint vertix: getVertices()) {
+				if (vertix.getX() < minX)
+					minX = vertix.getX();
+				if (vertix.getX() > maxX)
+					maxX = vertix.getX();
+				if (vertix.getY() < minY)
+					minY = vertix.getY();
+				if (vertix.getY() > maxY)
+					maxY = vertix.getY();
+			}
+			boundingBox[0] = minX;
+			boundingBox[1] = minY;
+			boundingBox[2] = maxX;
+			boundingBox[3] = maxY;
+	}
+	
+	
+	public int[] getBox() {
+		return boundingBox;
+	}
+
+
+	
+	public boolean BoxContains(IntPoint point) {
+		if (point.getX() >= boundingBox[0] && point.getY() >= boundingBox[1] &&
+				point.getX() <= boundingBox[2] && point.getY() <= boundingBox[3]) {
+			return true;
+		}
+		else 
+			return false;
+	}
+
 }

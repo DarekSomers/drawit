@@ -14,8 +14,6 @@ public class IntVector {
 	
 	/**
 	 * Initializes this object with given x- and y- coordinates.
-	 * @invar the coordinates cannot be null
-	 * 		| x != null && y != null
 	 * @post The object's x coordinate equals the given x
 	 * 		|getX() == x
 	 * @post The object's y coordinate equals the given y
@@ -32,6 +30,9 @@ public class IntVector {
 	 * @representationObject
 	 */
 	public int getX() {return this.x;}
+	
+	public void setX(int newX) {this.x = newX;}
+	
 	/**
 	 * Gives back the y-coordinate of the IntVector object
 	 * @return the y coordinate
@@ -39,6 +40,9 @@ public class IntVector {
 	 * @representationObject
 	 */
 	public int getY() {return this.y;}
+	
+	public void setY(int newY) {this.y = newY;}
+
 	
 	/**
 	 * Returns the crossproduct between this and the other IntVector objects

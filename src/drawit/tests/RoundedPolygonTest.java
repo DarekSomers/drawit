@@ -107,7 +107,7 @@ class RoundedPolygonTest {
 				"line 4.27842511464326 3.13921255732163 7.0 4.5\r\n" + 
 				"arc 6.514493092143049 -1.3329233976779493 5.0 2.0344439357957027 0.12435499454676213\r\n" + 
 				"line 3.7409921110169 2.8273280740112665 2.5 2.0\r\n" +
-				"",
+				"fill 255 255 0\r\n",
 				polly.getDrawingCommands());
 		
 		// test only work without setVertices @throw IllegalArgumentException

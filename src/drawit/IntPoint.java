@@ -14,8 +14,6 @@ public class IntPoint {
 
 	/**
 	 * Initializes this object with given x- and y- coordinates.
-	 * @invar the coordinates cannot be null
-	 * 		| x != null && y != null
 	 * @post The object's x coordinate equals the given x
 	 * 		|getX() == x
 	 * @post The object's y coordinate equals the given y
@@ -44,8 +42,8 @@ public class IntPoint {
 	/**
 	 * Returns whether this point's coordinates are equal to the given point's coordinates
 	 * @post returns true if this IntPoint is equal to the given IntPoint.
-	 * 		| (getX() == other.x && getY() == other.y) == true || 
-	 * 		| (getX() == other.x && getY() == other.y) == false
+	 * 		| (getX() == other.getX() && getY() == other.getY()) == true || 
+	 * 		| (getX() == other.getX() && getY() == other.getY()) == false
 	 */
 	public boolean equals(IntPoint other) {
 		return this.x == other.x && this.y == other.y;

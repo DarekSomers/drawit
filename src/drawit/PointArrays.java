@@ -105,7 +105,6 @@ public class PointArrays {
 
 	/**
 	 * Returns a new PointArray with the given IntPoint inserted into the given IntPoint array at the given index
-	 * @invar | index != null
 	 * @pre the index cannot go out of bounds of the IntPoint[] object
 	 * 		| index >= 0 && index <= points.length
 	 * @post The length of the resulting array is one greater than the given array.
@@ -133,7 +132,6 @@ public class PointArrays {
 	
 	/**
 	 * Returns a new PointArray with the given IntPoint removed from the given IntPoint array at the given index
-	 * @invar | index != null
 	 * @pre the index cannot go out of bounds of the IntPoint[] object
 	 * 		| index >= 0 && index < points.length
 	 * @post The length of the resulting array is one smaller than the given array.
@@ -158,7 +156,6 @@ public class PointArrays {
 	}
 	 /**
 	  * Returns a new PointArray where the given IntPoint replaces the old IntPoint at the given index of the IntPoint array
-	  * @invar | index != null
 	  * @pre the index cannot go out of bounds of the given IntPoint[] object
 	  * 	| index >= 0 && index < points.length
 	  * @post The length of the resulting array is equal to the given array.
