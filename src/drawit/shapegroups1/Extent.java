@@ -38,6 +38,7 @@ public class Extent {
 	/**
 	 * Returns the x-coordinate, of the edge parallel to the y-axis, with the smallest value
 	 * @return left
+	 * @representationObject
 	 */
 	public int getLeft() {
 		return left;
@@ -46,6 +47,7 @@ public class Extent {
 	/**
 	 * Returns the y-coordinate, of the edge parallel to the x-axis, with the smallest value
 	 * @return top
+	 * @representationObject
 	 */
 	public int getTop() {
 		return top;
@@ -53,6 +55,7 @@ public class Extent {
 	/**
 	 * Returns the x-coordinate, of the edge parallel to the y-axis, with the highest value
 	 * @return right
+	 * @representationObject
 	 */
 	public int getRight() {
 		return right;
@@ -60,6 +63,7 @@ public class Extent {
 	/**
 	 * Returns the y-coordinate, of the edge parallel to the x-axis, with the highest value
 	 * @return bottom
+	 * @representationObject
 	 */
 	public int getBottom() {
 		return bottom;

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.lang.Math;
 import java.lang.reflect.Array;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Creates a RoundedPolygon object and creates the commands for drawing the actual polygon
@@ -23,15 +24,23 @@ public class RoundedPolygon {
 	 * 		| rad != null
 	 */
 	private int rad;
-	
+	/**
+	 * Initializes the RoundedPolygon's colour
+	 * @pre colour cannot be null
+	 * 		| colour != null
+	 */
 	private java.awt.Color colour;
 	
-	
+	/**
+	 * Initializes the RoundedPolygon's boundingBox
+	 * @pre boundingBox cannot be null
+	 * 		| boundingBox != null
+	 */
 	private int[] boundingBox = new int[4];
 	
 	
 	/**
-	 * Initiates this RoundedPolygon
+	 * Initiates this RoundedPolygon with a given set of vertices, a radius for the corners, a colour and a boudingBox
 	 */
 	public RoundedPolygon() {
 		IntPoint[] Initializer = {new IntPoint(0,0), new IntPoint(1,0), new IntPoint(1,1), new IntPoint(0,1)};
@@ -47,6 +56,7 @@ public class RoundedPolygon {
 	 * @throws IllegalArgumentException when the given PointArray is null
 	 * 		|!(getVertices() == null)
 	 * @return PointArrays.copy(vertices)
+	 * @representationObject
 	 */
 	public IntPoint[] getVertices() {
 		return PointArrays.copy(vertices);
@@ -55,6 +65,7 @@ public class RoundedPolygon {
 	/**
 	 * Returns the radius of the RoundedPolygon
 	 * @return rad
+	 * @representationObject
 	 */
 	public int getRadius() {
 		return rad;
@@ -63,6 +74,7 @@ public class RoundedPolygon {
 	/**
 	 * Returns the colour of the given polygon
 	 * @return colour
+	 * @representationObject
 	 */
 	public java.awt.Color getColor(){
 		return colour;
@@ -322,7 +334,13 @@ public class RoundedPolygon {
 	}
 	
 
-
+	/**
+	 * Creates the polygon's boundingBox based on the positions of the polygon's vertices
+	 * @mutates | getBox()
+	 * @inspects | getVertices()
+	 * @post The polygon's boundingBox now equals the smallest possible rectangle containing all of the vertices
+	 * 		| IntStream.range(0, getVertices().length).allMatch(i -> BoxContains(getVertices()[i]))
+	 */
 	public void BoundingBox() {
 			int minX = getVertices()[0].getX();
 			int maxX = getVertices()[0].getX();
@@ -345,13 +363,24 @@ public class RoundedPolygon {
 			boundingBox[3] = maxY;
 	}
 	
-	
+	/**
+	 * Returns the boundingBox of this RoundedPolygon
+	 * @return boundingBox
+	 * @representationObject
+	 */
 	public int[] getBox() {
 		return boundingBox;
 	}
 
 
-	
+	/**
+	 * Tests whether the given IntPoint is contained by this RoundedPolygon
+	 * @pre The given IntPoint is not null
+	 * 		| point != null
+	 * @post Returns true when the point is contained by this polygon, or false ortherwise
+	 * 		| result == (point.getX() < getBox()[0] || point.getY() < getBox()[1] ||
+			| point.getX() > getBox()[2] || point.getY() > getBox()[3]) || result == true
+	 */
 	public boolean BoxContains(IntPoint point) {
 		if (point.getX() >= boundingBox[0] && point.getY() >= boundingBox[1] &&
 				point.getX() <= boundingBox[2] && point.getY() <= boundingBox[3]) {

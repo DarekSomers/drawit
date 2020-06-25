@@ -69,8 +69,8 @@ class ShapeGroupShape1Test {
 		
 		//toShape-/GlobalCoordinates
 		shape1.getShapeGroup().setExtent(Extent.ofLeftTopRightBottom(1, 3, 25, 25));
-		assertEquals(10,10, shape1.toShapeCoordinates(p(5,5)));
-		assertEquals(5,5, shape1.toGlobalCoordinates(p(10,10)));
+		assertEquals(5,5, shape1.toShapeCoordinates(p(5,5)));
+		assertEquals(5,5, shape1.toGlobalCoordinates(p(5,5)));
 		assertEquals(5,5, shape2.toShapeCoordinates(p(5,5)));
 		assertEquals(5,5, shape2.toGlobalCoordinates(p(5,5)));
 		

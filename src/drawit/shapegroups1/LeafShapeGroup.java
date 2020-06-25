@@ -21,6 +21,7 @@ public class LeafShapeGroup extends ShapeGroup{
 	/**
 	 * Returns the shape directly contained by this ShapeGroup 
 	 * @return leaf
+	 * @representationObject
 	 */
 	public RoundedPolygon getShape() {
 		return leaf;

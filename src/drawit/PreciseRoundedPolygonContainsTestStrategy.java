@@ -1,7 +1,23 @@
 package drawit;
 
+
+/**
+ * Each instance of this class tests whether a point is contained by the RoundedPolygon object
+ */
 public class PreciseRoundedPolygonContainsTestStrategy implements RoundedPolygonContainsTestStrategy {
 
+	/**
+	 * Tests whether the given IntPoint is contained by the given RoundedPolygon object
+	 * @throws IllegalArgumentException when either the given polygon or point is null
+	 * 		|!(polygon == null || point == null)
+	 * @post Returns true when the given point is contained by the given polygon, in other words when the amount of 
+	 * 		 intersections between the polygon and the exit path is odd. Returns false otherwise
+	 * 		| polygon.contains(point) == true || polygon.contains(point) == false
+	 * @post The given point is also cointained by the boudingBox of the polygon when it is contained by the polygon itself
+	 * 		| (polygon.contains(point) == true && polygon.BoxContains(point) == true) ||
+	 * 		| polygon.contains(point) == false
+	 * @inspects | polygon.getVertices()
+	 */
 	@Override
 	public boolean contains(RoundedPolygon polygon, IntPoint point) {
 		

@@ -18,8 +18,8 @@ import logicalcollections.LogicalList;
  * Each instance of a ShapeGroup is either a LeafShapeGroup, containing a RoundedPolygon object, or a NonleafShapeGroup,
  * containing multiple ShapeGroup objects.
  * @invar A shapeGroup is either a LeafShapGroup or a NonleafShapegroup
- * 		| (ShapeGroup instanceof LeafShapeGroup || ShapeGroup instanceof NonleafShapeGroup) && 
- * 		| !(ShapeGroup instanceof LeafShapeGroup && ShapeGroup instanceof NonleafShapeGroup)
+ * 		| (this instanceof LeafShapeGroup || this instanceof NonleafShapeGroup) && 
+ * 		| !(this instanceof LeafShapeGroup && this instanceof NonleafShapeGroup)
  * @invar this Shapegroup does not have the same ShapeGroup as a child twice
  * 		|  LogicalList.distinct(((NonleafShapeGroup) this).getSubgroups())
  * @invar this ShapeGroup's children have this ShapeGroup as their parent
@@ -79,6 +79,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the extent of the ShapeGroup expressed in its outer coordinate system
 	 * @return newEx
+	 * @representationObject
 	 */
 	public  Extent getExtent() {
 		return newEx;
@@ -87,6 +88,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the extent of the ShapeGroup expressed in its inner coordinate system
 	 * @return ex
+	 * @representationObject
 	 */
 	public Extent getOriginalExtent() {
 		return ex;
@@ -95,6 +97,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the previous extent of the ShapeGroup expressed in its outer coordinate system
 	 * @return prevEx
+	 * @representationObject
 	 */
 	public Extent getPreviousExtent() {
 		return prevEx;
@@ -105,6 +108,7 @@ public abstract class ShapeGroup {
 	 * @return parent
 	 * @post if parent is null, the given ShapeGroup is a root ShapeGroup
 	 * 		| result == null || result != null
+	 * @representationObject
 	 */
 	public NonleafShapeGroup getParentGroup() {
 		if (parent == null)
@@ -219,12 +223,14 @@ public abstract class ShapeGroup {
 		 
 		while (Pgroup.parent != null) {
 			Pgroup = Pgroup.parent;
-			widthChange *= (double)Pgroup.newEx.getWidth()/Pgroup.ex.getWidth();
-			heightChange *= (double)Pgroup.newEx.getHeight()/Pgroup.ex.getHeight();
+			widthChange *= ((double)Pgroup.newEx.getWidth()/Pgroup.ex.getWidth());
+			heightChange *= ((double)Pgroup.newEx.getHeight()/Pgroup.ex.getHeight());
 		}
 		
-		IntVector innerCoordinates = new IntVector((int)(globalCoordinates.getX() / widthChange), 
-				(int)(globalCoordinates.getY() / heightChange));
+		
+		
+		IntVector innerCoordinates = new IntVector((int)((double)globalCoordinates.getX() / widthChange), 
+				(int)((double)globalCoordinates.getY() / heightChange));
 		return innerCoordinates;
 	}
 	

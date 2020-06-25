@@ -40,6 +40,7 @@ public class Extent {
 	/**
 	 * Returns the x-coordinate, of the edge parallel to the y-axis, with the smallest value
 	 * @return left
+	 * @representationObject
 	 */
 	public int getLeft() {
 		return left;
@@ -47,6 +48,7 @@ public class Extent {
 	/**
 	 * Returns the y-coordinate, of the edge parallel to the x-axis, with the smallest value
 	 * @return top
+	 * @representationObject
 	 */
 	public int getTop() {
 		return top;
@@ -54,6 +56,7 @@ public class Extent {
 	/**
 	 * Returns width value. This equals the distance between the highest and lowest x-values of the extent
 	 * @return width
+	 * @representationObject
 	 */
 	public int getWidth() {
 		return width;
@@ -61,6 +64,7 @@ public class Extent {
 	/**
 	 * Returns height value. This equals the distance between the highest and lowest y-values of the extent
 	 * @return height
+	 * @representationObject
 	 */
 	public int getHeight() {
 		return height;

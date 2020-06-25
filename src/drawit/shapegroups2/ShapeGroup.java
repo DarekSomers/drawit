@@ -6,14 +6,16 @@ import drawit.DoublePoint;
 import drawit.IntPoint;
 import drawit.IntVector;
 import drawit.RoundedPolygon;
+import logicalcollections.LogicalList;
+import logicalcollections.LogicalSet;
 
 
 /**
  * Each instance of a ShapeGroup is either a LeafShapeGroup, containing a RoundedPolygon object, or a NonleafShapeGroup,
  * containing multiple ShapeGroup objects.
  * @invar A shapeGroup is either a LeafShapGroup or a NonleafShapegroup
- * 		| (ShapeGroup instanceof LeafShapeGroup || ShapeGroup instanceof NonleafShapeGroup) && 
- * 		| !(ShapeGroup instanceof LeafShapeGroup && ShapeGroup instanceof NonleafShapeGroup)
+ * 		| (this instanceof LeafShapeGroup || this instanceof NonleafShapeGroup) && 
+ * 		| !(this instanceof LeafShapeGroup && this instanceof NonleafShapeGroup)
  * @invar this Shapegroup does not have the same ShapeGroup as a child twice
  * 		|  LogicalList.distinct(((NonleafShapeGroup) this).getSubgroups())
  * @invar this ShapeGroup's children have this ShapeGroup as their parent
@@ -94,6 +96,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the extent of the ShapeGroup expressed in its outer coordinate system
 	 * @return newEx
+	 * @representationObject
 	 */
 	public Extent getExtent() {
 		return newEx;
@@ -102,6 +105,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Returns the extent of the ShapeGroup expressed in its inner coordinate system
 	 * @return ex
+	 * @representationObject
 	 */
 	public Extent getOriginalExtent() {
 		return ex;
@@ -112,6 +116,7 @@ public abstract class ShapeGroup {
 	 * @return parent
 	 * @post if parent is null, the given ShapeGroup is a root ShapeGroup
 	 * 		| result == null || result != null
+	 * @representationObject
 	 */
 	public NonleafShapeGroup getParentGroup() {
 		return parent;
@@ -131,6 +136,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Return the first element of the children's array
 	 * @return first
+	 * @representationObject
 	 */
 	public ShapeGroup getFirst() {
 		return first;
@@ -150,6 +156,7 @@ public abstract class ShapeGroup {
 	/**
 	 * Return the last element of the children array
 	 * @return last
+	 * @representationObject
 	 */
 	public ShapeGroup getLast() {
 		return last;
@@ -169,6 +176,8 @@ public abstract class ShapeGroup {
 	/**
 	 * Return the next element of the children array
 	 * @return next
+	 * @representationObject
+	 * @peerObject
 	 */
 	public ShapeGroup getNext() {
 		return next;
@@ -188,6 +197,8 @@ public abstract class ShapeGroup {
 	/**
 	 * Return the previous element of the children's array
 	 * @return previous
+	 * @representationObject
+	 * @peerObject
 	 */
 	public ShapeGroup getPrevious() {
 		return previous;
@@ -222,10 +233,8 @@ public abstract class ShapeGroup {
 		double translateY = 0;
 		while (Pgroup.parent != null) {
 			Pgroup = Pgroup.parent;
-			//scaleX *= (double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth();
 			translateX += (double)(globalCoordinates.getX() + translateX - Pgroup.getExtent().getLeft()) / 
 					((double)Pgroup.newEx.getWidth() / Pgroup.ex.getWidth()) + Pgroup.getOriginalExtent().getLeft() - globalCoordinates.getX() - translateX;
-			//scaleY *= (double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight();
 			translateY += (double)(globalCoordinates.getY() + translateY - Pgroup.getExtent().getTop()) / 
 					((double)Pgroup.newEx.getHeight() / Pgroup.ex.getHeight()) + Pgroup.getOriginalExtent().getTop() - globalCoordinates.getY() - translateY;
 		}
@@ -336,11 +345,12 @@ public abstract class ShapeGroup {
 	
 	/**
 	 * Moves this ShapeGroup to the front of its parent's list of subgroups
-	 * @mutates_properties | getSubgroups()
+	 * @mutates_properties | getParentGroup().getSubgroups()
 	 * @post this ShapeGroup is the first element of its parent's children array 
 	 * 		| this == ((NonleafShapeGroup) getParentGroup()).getSubgroup(0)
 	 * @post the order of the other child ShapeGroups in the parent's children array is retained
-	 * 		
+	 * 		| getParentGroup().getSubgroups().equals(
+	 *      | LogicalList.plusAt(LogicalList.minus(old(getParentGroup()).getSubgroups(), this), 0, this))
 	 */
 	public void bringToFront() {
 		if (this != parent.getFirst()) {
@@ -362,10 +372,12 @@ public abstract class ShapeGroup {
 	
 	/**
 	 * Moves this ShapeGroup to the back of its parent's list of subgroups
-	 * @mutates_properties | getSubgroups()
+	 * @mutates_properties | getParentGroup().getSubgroups()
 	 * @post this ShapeGroup is the last element of its parent's children array 
 	 * 		| this == ((NonleafShapeGroup) getParentGroup()).getSubgroup(((NonleafShapeGroup) getParentGroup()).getSubgroupCount()-1)
 	 * @post the order of the other child ShapeGroups in the parent's children array is retained
+	 *		| getParentGroup().getSubgroups().equals(
+	 *      | LogicalList.plus(LogicalList.minus(old(getParentGroup()).getSubgroups(), this), this))
 	 * 		
 	 */
 	public void sendToBack() {

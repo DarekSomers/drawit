@@ -12,9 +12,9 @@ import drawit.RoundedPolygon;
 public class LeafShapeGroup extends ShapeGroup {
 	
 	/**
-	 * Contains the leaf RoundedPolygon object
-	 * @invar leaf is null when nonLeaf is not null and vice versa
-	 * 		| (nonLeaf == null && leaf != null) || (leaf == null && nonLeaf != null)
+	 * The RoundedPolygon object contained by this ShapeGroup
+	 * @invar leaf cannot be null
+	 * 		| leaf != null
 	 */
 	private RoundedPolygon leaf;
 	
@@ -48,6 +48,7 @@ public class LeafShapeGroup extends ShapeGroup {
 	/**
 	 * Returns the shape directly contained by this ShapeGroup 
 	 * @return leaf
+	 * @representationObject
 	 */
 	public RoundedPolygon getShape() {
 		return leaf;

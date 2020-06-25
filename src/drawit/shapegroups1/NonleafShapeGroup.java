@@ -12,7 +12,7 @@ import drawit.IntPoint;
 /**
  * Each instance of this class represents a ShapeGroup containing a ShapeGroup array
  * @invar For every NonleafShapeGroup object, nonleaf is not null
- * 		| getNonleaf != null
+ * 		| getNonleaf() != null
  */
 public class NonleafShapeGroup extends ShapeGroup {
 
@@ -53,6 +53,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 	/**
 	 * Returns an array of this ShapeGroup's children
 	 * @return nonLeaf
+	 * @representationObject
 	 */
 	public ShapeGroup[] getNonleaf() {
 		return nonLeaf;
@@ -81,7 +82,7 @@ public class NonleafShapeGroup extends ShapeGroup {
 	 * 		| subgroups.stream().allMatch(child -> child != null)
 	 * @post this NonleafShapeGroup's children now equal subgroups
 	 * 		| IntStream.range(0, getSubgroupCount()).allMatch(i -> subgroups.get(i) == getSubgroups().get(i))
-	 * @mutates | nonLeaf
+	 * @mutates | getNonleaf()
 	 */
 	public void setSubgroups(List<ShapeGroup> subgroups) {
 		Iterator<ShapeGroup> it = subgroups.iterator();
